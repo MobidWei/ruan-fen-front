@@ -84,7 +84,7 @@
         <div class="col-md-1 ">3</div>
       </div>
       <div class="row">
-        <div class="card" style="width: 100%;background-color: #ffffff8D;margin: 10px 0">
+        <div class="card" style="width: 100%;background-color: #ffffff;margin: 10px 0">
           <div class="card-body">
             <div style="display: flex;align-items: center; justify-content: left">
               <svg style="margin-right: 10px" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -312,7 +312,7 @@
 
 <script>
 import {ElMessage} from "element-plus";
-import Nav_bar from "@/components/Navbar.vue";
+import Nav_bar from "@/component/Navbar.vue";
 
 
 export default {

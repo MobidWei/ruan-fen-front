@@ -10,6 +10,16 @@ const routes: Array<RouteRecordRaw> = [
     component: Home
   },
   {
+    path: '/AddArtical',
+    name: 'AddArtical',
+    component: () => import('../views/AddArtical.vue')
+  },
+  {
+    path: '/portalClaim',
+    name: 'portalClaim',
+    component: () => import('../views/portalClaim.vue')
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting

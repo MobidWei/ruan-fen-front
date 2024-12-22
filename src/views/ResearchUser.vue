@@ -11,7 +11,7 @@
             <div id="duplicated-author">
                 <p class="get-author">
                   <span style="margin-right: 18px; font-size: 14px; color: #333;">同名作者</span>
-                  <router-link to="">本人认领自己的成果库</router-link>
+                  <router-link to="/portalClaim">本人认领自己的成果库</router-link>
                 </p>
                 <ul>
                   <li v-for="author in duplicated_authors" :key="author.id">
@@ -281,7 +281,7 @@ export default defineComponent({
   font-size: 18px;
   
   height: 32px;
-  border-bottom: 2px solid rgba(31, 97, 141, 0.5);
+  border-bottom: 2px solid rgba(118,68,138, 0.5);
   line-height: 26px;
 }
 
@@ -294,7 +294,7 @@ export default defineComponent({
 
 .doc-title a {
   text-decoration: underline;
-  color: #2471A3;
+  color: #76448A;
 }
 
 .doc-content {
@@ -310,14 +310,12 @@ export default defineComponent({
 }
 
 .doc-content a{
-  color: #003366;
+  color: #6C3483;
 }
 
 .doc-content a:hover {
-  color: #2471A3;
+  color: #A93226;
   text-decoration: underline;
 }
-
-
 
 </style>

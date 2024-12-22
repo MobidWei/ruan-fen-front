@@ -196,7 +196,7 @@ const clearHandle = () => {
   multipleSelection.value = []
   multipleTableRef.value.clearSelection()
 }
-const handleFilter = (tag:string)=>{
+const handleFilter = (tag:keyof Params)=>{
   if(tag === 'publishTime') {
     // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
     Object.assign(searchParams.value,{

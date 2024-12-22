@@ -69,7 +69,7 @@
 
 <script lang="ts" setup>
 import {ref} from 'vue'
-import Nav_bar from "@/Component/Navbar2.vue";
+import Nav_bar from "@/component/Navbar2.vue";
 
 interface MenuItem {
     id: number;

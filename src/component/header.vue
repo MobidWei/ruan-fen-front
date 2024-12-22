@@ -46,7 +46,7 @@ export default{
   width: 100%;
   display: block;
 
-  border-top: 5px solid #004fd9;
+  border-top: 5px solid #76448A;
   box-shadow: 0px 1px 1px rgba(128,128,128,0.3);
   /* background-color: gray; */
 }
