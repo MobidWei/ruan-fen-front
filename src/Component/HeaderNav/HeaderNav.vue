@@ -68,10 +68,8 @@
                     <el-icon>
                         <ChatLineRound/>
                     </el-icon>
-                    <span>问答</span></div>
+                    <span></span></div>
             </div>
-            <span class="btn-search pointer">结果中检索</span>
-            <span class="btn-search pointer">检索设置</span>
         </div>
 <!--        <div class="submenu">-->
 <!--            <div class="submenu__con flex align-center">-->
