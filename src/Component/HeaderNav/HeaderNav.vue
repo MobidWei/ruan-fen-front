@@ -1,6 +1,44 @@
 <template>
-    <Nav_bar />
     <div class="full-width">
+        <div class="header flex align-center">
+            <div class="header__conta">
+                <el-row>
+                    <el-col :span="4">
+                        <div class="logo flex align-center">
+                            <img src="~@/assets/images/logo.png"/>
+                        </div>
+                    </el-col>
+                    <el-col :span="11">
+                        <div class="header__conta__menu flex align-center justify-center">
+                            <ul class="flex align-center menu__lis">
+                                <li class="flex align-center justify-center pointer" v-for="item in menus"
+                                    :key="item.id" :class="{'current':item.id === currentId}" @click="handleMenu(item)">
+                                    <span>{{ item.label }}</span>
+                                    <el-icon>
+                                        <ArrowDown/>
+                                    </el-icon>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </el-col>
+                    <el-col :span="1">&nbsp;</el-col>
+                    <el-col :span="8">
+                        <div class="right__menu flex align-center">
+                            <span class="icon-co flex align-center flex-1"><el-icon><QuestionFilled/></el-icon></span>
+                            <span class="icon-co flex-1"><el-icon><Bell/></el-icon></span>
+                            <span class="text-co flex-1 ">充值</span>
+                            <span class="text-co  flex-1">会员</span>
+                            <div class="avatar flex align-center  flex-1">
+                                <el-avatar :size="50"  class="ava flex-shrink"/>
+                                <span class="ellipsis">个人名称</span>
+                            </div>
+                            <span class="p__login pointer">登录</span>
+                        </div>
+                    </el-col>
+                </el-row>
+            </div>
+        </div>
         <div class="search__bar flex align-center">
             <div class="search__bar__inner flex align-center flex-1">
                 <el-popover
@@ -8,25 +46,24 @@
                         title=""
                         :width="180"
                         trigger="hover"
-
                 >
                     <template #reference>
         <span class="sele flex flex-shrink justify-center align-center pointer">
-          主题<el-icon class="m-l-5"><CaretBottom/></el-icon>
+          {{ currentField }}<el-icon class="m-l-5"><CaretBottom/></el-icon>
         </span>
                     </template>
                     <template #default>
                         <ul class="pop__menu">
-                            <li class="pointer">摘要</li>
-                            <li class="pointer">作者</li>
-                            <li class="pointer">关键词</li>
+                            <li class="pointer" @click="selectTheme('主题')">主题</li>
+                            <li class="pointer" @click="selectTheme('来源')">来源</li>
+                            <li class="pointer" @click="selectTheme('作者')">作者</li>
+                            <li class="pointer" @click="selectTheme('研究领域')">研究领域</li>
                         </ul>
-
-
                     </template>
                 </el-popover>
                 <el-input v-model="searchParams.search" class="inpt"/>
-                <span class="pointer flex-shrink search flex align-center justify-center"><el-icon><Search/></el-icon></span>
+                <span class="pointer flex-shrink search flex align-center justify-center"><el-icon><Search
+                        @click="sendData"/></el-icon></span>
                 <div class="pointer flex-shrink ques flex align-center justify-center">
                     <el-icon>
                         <ChatLineRound/>
@@ -36,40 +73,61 @@
             <span class="btn-search pointer">结果中检索</span>
             <span class="btn-search pointer">检索设置</span>
         </div>
-        <div class="submenu">
-            <div class="submenu__con flex align-center">
-                <div class="total__sub flex align-center">
-                    <div class="total__sub__info flex align-center justify-center flex-shrink"><span class="
-            b_t">总库</span><span class="s_t">14.72万</span></div>
-                    <div class="lan flex align-center justify-center flex-column">
-                        <!-- <span class="current flex align-center justify-center">中文</span>
-                        <span class="flex align-center justify-center">外文</span> -->
-                        <span v-for="item in langs" :key="item.value" class="flex align-center justify-center"
-                              :class="{'current':currentLang === item.value}"
-                              @click="changeLang(item)">{{ item.label }}</span>
-                    </div>
-                </div>
-                <div class="all__sub flex-1">
-                    <div class="all__sub__inner  flex align-center flex-1">
-                        <div v-for="item in submenu" :key="item.id"
-                             class="flex flex-column align-center  flex-1 pointer submenu__item ">
-                            <span class="b_b">{{ item.title }}</span>
-                            <span class="s_b">{{ item.count }}</span>
-                            <el-icon v-show="item.isArrow">
-                                <CaretBottom/>
-                            </el-icon>
-                            <span class="blank" v-show="!item.isArrow"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--        <div class="submenu">-->
+<!--            <div class="submenu__con flex align-center">-->
+<!--                <div class="total__sub flex align-center">-->
+<!--                    <div class="total__sub__info flex align-center justify-center flex-shrink"><span class="-->
+<!--            b_t">总库</span></div>-->
+<!--                </div>-->
+<!--                <div class="all__sub flex-1">-->
+<!--                    <div class="all__sub__inner  flex align-center flex-1">-->
+<!--                        <div v-for="item in submenu" :key="item.id"-->
+<!--                             class="flex flex-column align-center  flex-1 pointer submenu__item ">-->
+<!--                            <span class="b_b">{{ item.title }}</span>-->
+<!--                            <el-icon v-show="item.isArrow">-->
+<!--                                <CaretBottom/>-->
+<!--                            </el-icon>-->
+<!--                            <span class="blank" v-show="!item.isArrow"></span>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref, defineEmits} from 'vue'
 import Nav_bar from "@/Component/Navbar2.vue";
+import {defineProps} from "vue/dist/vue";
+
+const currentField = ref('主题');
+const selectTheme = (value: string) => {
+  currentField.value = value;
+  if (value === '来源') {
+    searchParams.value.field = 'source'
+  } else if (value === '作者') {
+    searchParams.value.field = 'researcherName'
+  } else if (value === '研究领域') {
+    searchParams.value.field = 'fieldOfResearch'
+  } else if(value === '主题'){
+    searchParams.value.field = 'articleName'
+  }
+};
+interface Props {
+    page: number
+}
+
+const props = defineProps<Props>();
+
+const emit = defineEmits<{
+    (event: 'sendData', payload: { search: string ,field: string}): void;
+    (event: 'requestSearch', payload: {field: string,page: number,pageSize: number }): void;
+}>();
+const sendData = () => {
+    emit('sendData', searchParams.value);
+    emit('requestSearch', searchParams.value);
+};
 
 interface MenuItem {
     id: number;
@@ -88,26 +146,24 @@ let menus: MenuItem[] = [
 ]
 
 let submenu = [
-    {id: 1, title: '学术期刊', count: '9.93万', isArrow: true},
-    {id: 2, title: '学位论文', count: '3.4万', isArrow: true},
-    {id: 3, title: '会议', count: '8000', isArrow: true},
-    {id: 4, title: '报纸', count: '800', isArrow: false},
-    {id: 5, title: '年鉴', count: '', isArrow: false},
-    {id: 6, title: '图书', count: '0', isArrow: true},
-    {id: 7, title: '专利', count: '', isArrow: true},
-    {id: 8, title: '标准', count: '130', isArrow: true},
-    {id: 9, title: '成果', count: '2722', isArrow: false},
-
-
+    {id: 1, title: '学术期刊', isArrow: true},
+    {id: 2, title: '学位论文', isArrow: true},
+    {id: 3, title: '会议', isArrow: true},
+    {id: 4, title: '报纸', isArrow: false},
+    {id: 5, title: '年鉴', isArrow: false},
+    {id: 6, title: '图书', isArrow: true},
+    {id: 7, title: '专利', isArrow: true},
+    {id: 8, title: '标准', isArrow: true},
+    {id: 9, title: '成果', isArrow: false},
 ]
-let langs: LangItem[] = [
-    {label: '中文', value: 0},
-    {label: '外文', value: 1},
-]
+
 let currentLang = ref<number>(0)
 let currentId = ref<number>(0)
-let searchParams = ref({
-    search: '1'
+const searchParams = ref({
+    search: ''
+    , field:'articleName'
+    ,page:props.page
+    ,pageSize:20
 })
 const handleMenu = (item: MenuItem) => {
     currentId.value = item.id
@@ -283,15 +339,14 @@ const changeLang = (item: LangItem) => {
         width: 242px;
         height: 74px;
         box-sizing: border-box;
-        // border:  rgba(255,255,255,.5);
-        border-left: 1px solid rgba(255, 255, 255, .5);
-        border-top: 1px solid rgba(255, 255, 255, .5);
-        border-bottom: 1px solid rgba(255, 255, 255, .5);
+        //border:  rgba(255,255,255,.5);
+        //border-left: 1px solid rgba(255, 255, 255, .5);
+        //border-top: 1px solid rgba(255, 255, 255, .5);
+        //border-bottom: 1px solid rgba(255, 255, 255, .5);
         // border-right:1px solid rgba(255,255,255,.5);
         // border-radius:3px;
 
-        padding-top: 10px;
-        background: rgba(255, 255, 255, .2);
+        padding-bottom: 10px;
         flex-direction: column;
 
         .b_t {
