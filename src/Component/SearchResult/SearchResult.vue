@@ -70,7 +70,7 @@
                         ref="multipleTableRef"
                         :header-cell-style="{background:'#f2f2f2'}"
                         stripe
-                        :data="tableData"
+                        :data="props.articles"
                         style="width: 100%"
                         @selection-change="handleSelectionChange"
                         @row-click="goDetail"
