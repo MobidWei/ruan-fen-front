@@ -7,15 +7,19 @@
     </el-dialog>
     <!--  导航栏-->
     <Nav_bar></Nav_bar>
-    <div class="" style="width: 100%;height: 150px"></div>
+    <div class="" style="width: 100%; height: 150px; padding-top: 50px;">
+      <div style="margin: 0 auto; width: fit-content;">
+        <img src="../assets/logo-无背景.png" alt="" style="height: 70px">
+      </div>
+    </div>
     <div class="container text-center">
       <div class="row">
-        <div class="col-md-1"></div>
-        <div class="col-md-10 ">
+        <div class="col-md-1 "></div>
+        <div class="col-md-10 " >
           <div class="container">
-            <div class="row">
+            <div class="row" style="border: 1px solid rgba(128, 128, 128, 0.4); border-radius: 10px; margin-bottom: 40px; padding-bottom: 30px; padding-left: 10px; padding-right: 20px;">
               <div class="col-1" style="padding: 5px 0">
-                <button class="btn btn-outline-light" type="button" style="width: 100%;min-height: 80px"
+                <button class="btn btn-outline-light" type="button" style="width: 100%; min-height: 80px; color: black;"
                         data-bs-toggle="dropdown" aria-expanded="false">
                   {{ search_setting.types[search_setting.type].value }}
                   <br>
@@ -34,15 +38,13 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-11" style="padding: 5px">
+              <div class="col-11" style="padding: 5px" >
                 <div class="container">
                   <div class="row">
                     <button type="button" class="btn header-card"
-                            :class="search_setting.mode===0?'btn-light':'btn-outline-dark'" @click="change_mode(0)">普通检索
+                            :class="search_setting.mode===0?'btn-outline-dark':'btn-light'" @click="change_mode(0)">普通检索
                     </button>
-                    <button type="button" class="btn header-card"
-                            :class="search_setting.mode===1?'btn-light':'btn-outline-dark'" @click="change_mode(1)">高级检索
-                    </button>
+                    <router-link to='AdvancedSearch' style="width: fit-content; line-height: 40px;">点击前往高级检索</router-link>
                   </div>
                 </div>
                 <div class="input-group input-group-md">
@@ -66,7 +68,7 @@
                     </svg>
                   </button>
                 </div>
-                <div style="width: 100%; align-items: center">
+                <!-- <div style="width: 100%; align-items: center">
                   <button class="btn btn-outline-primary" type="button" style="margin: 20px" @click="select_all">全选
                   </button>
                   <div class="form-check form-switch form-check-inline" v-for="(item,index) in search_setting.choices"
@@ -75,7 +77,7 @@
                            v-model="item.choose" @change="save_choices">
                     <label class="form-check-label" :for="'flexSwitchCheck'+index">{{ item.name }}</label>
                   </div>
-                </div>
+                </div> -->
 
               </div>
             </div>
@@ -84,7 +86,7 @@
         <div class="col-md-1 "></div>
       </div>
       <div class="row">
-        <div class="card" style="width: 100%;background-color: #ffffff8D;margin: 10px 0">
+        <!-- <div class="card" style="width: 100%;background-color: #ffffff;margin: 10px 0">
           <div class="card-body">
             <div style="display: flex;align-items: center; justify-content: left">
               <svg style="margin-right: 10px" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -105,14 +107,14 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-8 " style="padding-left: 0;">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
             <h5 class="card-header">周下载排行</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
-                <tbody v-if="!loading_hot_articles">
+                <tbody>
                 <tr v-for="(item, index) in download_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -146,14 +148,6 @@
                   <td>{{ item.time }}</td>
                 </tr>
                 </tbody>
-                <tbody v-else>
-                <tr class="spinner-grow text-info" role="status">
-                </tr>
-                <tr>
-                  加载中...
-                </tr>
-                </tbody>
-
               </table>
             </div>
           </div>
@@ -163,7 +157,7 @@
             <h5 class="card-header">周热词排行</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
-                <tbody v-if="!loading_hot_words">
+                <tbody>
                 <tr v-for="(item, index) in hot_words_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -224,13 +218,6 @@
                   </td>
                 </tr>
                 </tbody>
-                <tbody v-else>
-                <tr class="spinner-grow text-info" role="status">
-                </tr>
-                <tr>
-                  加载中...
-                </tr>
-                </tbody>
               </table>
             </div>
           </div>
@@ -241,7 +228,7 @@
           <h5 class="card-header">新品速递</h5>
           <div class="card-body" style="height: 100%">
             <el-space style="width: 100%" fill>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+              <el-skeleton style="display: flex; gap: 8px" :loading="loading" animated :count="4">
                 <template #template>
                   <div style="flex: 1">
                     <el-skeleton-item variant="image" style="height: 240px"/>
@@ -256,37 +243,7 @@
                   </div>
                 </template>
                 <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index" :body-style="{ padding: '10px'}"
-                           class="card-hover cus-card">
-                    <a :href="item.url" style="text-decoration: none;color: black">
-                      <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
-                      <div style="padding: 14px">
-                        <div style="margin-bottom: 10px">{{ item.title }}</div>
-                        <div class="bottom card-header" style="margin-top: 5px">
-                          {{ item.type === 0 ? "论文" : "专利" }}
-                        </div>
-                      </div>
-                    </a>
-
-                  </el-card>
-                </template>
-              </el-skeleton>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
-                <template #template>
-                  <div style="flex: 1">
-                    <el-skeleton-item variant="image" style="height: 240px"/>
-                    <div style="padding: 14px">
-                      <el-skeleton-item variant="h3" style="width: 50%"/>
-                      <div
-                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
-                        <el-skeleton-item variant="text" style="width: 30%"/>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index" :body-style="{ padding: '10px'}"
+                  <el-card v-for="(item,index) in new_article_list" :key="index" :body-style="{ padding: '10px'}"
                            class="card-hover cus-card">
                     <a :href="item.url" style="text-decoration: none;color: black">
                       <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
@@ -351,13 +308,11 @@
     <!--  侧栏页面-->
 
   </div>
-
-
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
-import Nav_bar from "@/components/Navbar.vue";
+import Nav_bar from "@/component/header.vue";
 
 
 export default {
@@ -368,9 +323,7 @@ export default {
       logo_img: 'images/logo.png',
       dialogVisible: false,
       nav_img_head: '软分知网',
-      loading_hot_articles: true,
-      loading_hot_words: true,
-      loading_new_articles: true,
+      loading: true,
       current_date: new Date().toDateString(),
       user_data: {
         login: true,
@@ -443,9 +396,96 @@ export default {
           link: "#"
         },
       ],
-      download_list: [],
-      hot_words_list: [],
-      new_article_list: [],
+      download_list: [
+        {
+          index: 1,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 2,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 3,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 4,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 5,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 6,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 7,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 8,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 9,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+        {
+          index: 10,
+          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+          link: "#",
+          belong: "《心理科学进展》",
+          time: "2024-10-10"
+        },
+      ],
+      hot_words_list: [
+        {index: 1, name: "新质生产力", hot_value: "12345", type: 0},
+        {index: 2, name: "新质生产力", hot_value: "12345", type: 1},
+        {index: 3, name: "新质生产力", hot_value: "12345", type: 2},
+        {index: 4, name: "新质生产力", hot_value: "12345", type: 2},
+        {index: 5, name: "新质生产力", hot_value: "12345", type: 0},
+        {index: 6, name: "新质生产力", hot_value: "12345", type: 1},
+        {index: 7, name: "新质生产力", hot_value: "12345", type: 0},
+        {index: 8, name: "新质生产力", hot_value: "12345", type: 1},
+        {index: 9, name: "新质生产力", hot_value: "12345", type: 2},
+        {index: 10, name: "新质生产力", hot_value: "12345", type: 0},
+      ],
+      new_article_list: [
+        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+      ],
       test: true,
       log_message: "什么都没有哦~",
     }
@@ -556,131 +596,16 @@ export default {
       }
       this.dialogVisible = true;
     },
-    load_hot_words() {
-      setTimeout(() => {
-        this.hot_words_list = [{index: 1, name: "新质生产力", hot_value: "12345", type: 0},
-          {index: 2, name: "新质生产力", hot_value: "12345", type: 1},
-          {index: 3, name: "新质生产力", hot_value: "12345", type: 2},
-          {index: 4, name: "新质生产力", hot_value: "12345", type: 2},
-          {index: 5, name: "新质生产力", hot_value: "12345", type: 0},
-          {index: 6, name: "新质生产力", hot_value: "12345", type: 1},
-          {index: 7, name: "新质生产力", hot_value: "12345", type: 0},
-          {index: 8, name: "新质生产力", hot_value: "12345", type: 1},
-          {index: 9, name: "新质生产力", hot_value: "12345", type: 2},
-          {index: 10, name: "新质生产力", hot_value: "12345", type: 0}
-        ]
-        this.loading_hot_words = false;
-      }, 2000)
-    },
-    load_hot_articles() {
-      setTimeout(() => {
-        this.download_list = [
-          {
-            index: 1,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 2,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 3,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 4,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 5,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 6,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 7,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 8,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 9,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 10,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-        ]
-        this.loading_new_articles = false;
-      }, 2500)
-    },
-    load_new_articles() {
-      setTimeout(() => {
-        this.new_article_list = [
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究0", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究1", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究2", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究3", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究4", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究5", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究6", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究7", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-        ];
-        this.loading_hot_articles = false;
-      }, 3000)
-    },
-    init() {
-      this.loading_hot_words = true;
-      this.loading_hot_articles = true;
-      this.loading_new_articles = true;
-    },
-
 
   },
   created() {
-    this.init();
     this.load_history();
     this.load_choices();
-    this.load_hot_words();
-    this.load_new_articles();
-    this.load_hot_articles();
-  },
+    setTimeout(() => {
+      this.loading = false;
+    }, 2000)
 
+  },
   computed: {
     choice_num() {
       let num = 0;
@@ -701,11 +626,12 @@ export default {
 }
 
 .page-background {
-  background-image: url("/public/images/background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-color: #f9f9f9;
 }
+
 
 
 .header-card {
@@ -723,6 +649,7 @@ export default {
   border-top-left-radius: 0 !important;
   width: 100% !important;
 }
+
 
 
 .blue-hover {

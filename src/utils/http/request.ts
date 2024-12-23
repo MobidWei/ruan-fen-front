@@ -10,7 +10,7 @@ function createRequest<T = ServiceResult>(config: AxiosRequestConfig): Promise<T
      */
     const instance: AxiosInstance = axios.create({
         // baseURL: import.meta.env.VITE_BASE_API,
-        baseURL: '/api',
+        baseURL: 'http://localhost:8080',
         timeout: 1000 * 5,
         headers: {
             'Content-Type': 'application/json;charset=UTF-8'

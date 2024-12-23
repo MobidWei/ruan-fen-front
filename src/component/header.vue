@@ -1,43 +1,65 @@
 <template>
   <div class="header">
-      <div class="header_content">
-          <router-link to="/" class="header-tag">
-            <img src="../assets/logo-无背景.png" alt="" id="tag">
-          </router-link>
-          <div class="home-page">
-            <router-link to="/" class="title">首页</router-link>
+    <div class="header_content">
+      <router-link to="/" class="header-tag">
+        <img src="../assets/logo-无背景.png" alt="" id="tag" />
+      </router-link>
+      <div class="home-page">
+        <router-link to="/" class="title">首页</router-link>
+      </div>
+      <div class="index">
+        <div class="index-block">
+          <router-link to="/search" class="index-block-content"
+            >检索</router-link
+          >
+        </div>
+        <div class="index-block">
+          <router-link to="/advancedSearch" class="index-block-content"
+            >高级检索</router-link
+          >
+        </div>
+      </div>
+      <div class="right">
+        <div class="person">
+          <div class="help-block">
+            <div
+              class="help-content iconfont"
+              @mouseenter="hovered = true"
+              @mouseleave="hovered = false"
+              :class="{ 'icon-bangzhu1': hovered, 'icon-icon--help': !hovered }"
+            ></div>
           </div>
-          <div class="index">
-            <div class="index-block">
-              <router-link to="" class="index-block-content">检索</router-link>
-            </div>
-            <div class="index-block">
-              <router-link to="" class="index-block-content">我的消息</router-link>
-            </div>
+          <div class="login" v-if="!store.state.hasLogin.value">
+            <router-link to="/login">
+              <button class="login-button">
+                个人登录
+              </button>
+            </router-link>
           </div>
-          <div class="right">
-            <div class="person">
-              <div class="help-block">
-                <div class="help-content iconfont"
-                @mouseenter="hovered = true"
-                @mouseleave="hovered = false"
-                :class="{ 'icon-bangzhu1': hovered, 'icon-icon--help': !hovered }"></div>
-              </div>
-              <div class="login">
-                <button class="login-button">个人登录</button>
-              </div>
-            </div>
+          <div class="login" v-if="store.state.hasLogin.value">
+            <button class="login-button">
+              退出登录
+            </button>
           </div>
+        </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script lang="ts">
-import {ref} from 'vue'
+import { useStore } from 'vuex'
+import { ref } from "vue";
 const hovered = ref(false);
-export default{
-  name: 'headerView',
-}
+export default {
+  name: "headerView",
+  setup(){
+    const store = useStore();
+    return {
+      store,
+    }
+  }
+};
 </script>
 
 
@@ -46,8 +68,8 @@ export default{
   width: 100%;
   display: block;
 
-  border-top: 5px solid #004fd9;
-  box-shadow: 0px 1px 1px rgba(128,128,128,0.3);
+  border-top: 5px solid #76448a;
+  box-shadow: 0px 1px 1px rgba(128, 128, 128, 0.3);
   /* background-color: gray; */
 }
 
@@ -63,7 +85,7 @@ export default{
   width: 124px;
 }
 
-#tag{
+#tag {
   width: 100%;
   object-fit: fill;
 }
@@ -71,7 +93,7 @@ export default{
 .home-page {
   position: relative;
   display: inline-block;
-  
+
   margin-left: 17px;
   padding-left: 17px;
   padding-right: 37px;
@@ -81,8 +103,9 @@ export default{
   color: #000;
 }
 
-.home-page::before, .index-block::before{
-  content: '';
+.home-page::before,
+.index-block::before {
+  content: "";
   position: absolute;
   right: -1px;
   top: 18px;
@@ -96,13 +119,13 @@ export default{
   line-height: 62px;
   font-size: 16px;
   font-weight: bold;
-  font-family: 'MicrosoftYaHei-Bold';
+  font-family: "MicrosoftYaHei-Bold";
   color: rgb(80, 102, 151);
 }
 
 .home-page .title:hover {
   cursor: pointer;
-  color: #CC3333;
+  color: #cc3333;
 }
 
 .index {
@@ -131,7 +154,7 @@ export default{
   text-align: center;
 }
 
-.right{
+.right {
   position: absolute;
   right: 0;
   display: inline-block;
@@ -167,28 +190,28 @@ export default{
   /* margin-top: 21px; */
   width: 20px;
   height: 22px;
-  
 }
 
-.iconfont .icon-icon--help, .iconfont .icon-bangzhu1 {
+.iconfont .icon-icon--help,
+.iconfont .icon-bangzhu1 {
   font-size: 24px;
   color: black;
 }
 
-.login{
+.login {
   display: inline-block;
   height: 62px;
   line-height: 62px;
 }
 
-.login-button{
+.login-button {
   width: 70px;
   height: 30px;
   margin-top: 15px;
 
   border: 1px solid #004fd9;
   border-radius: 8px;
-  background: #D6EAF8;
+  background: #d6eaf8;
 
   font-family: "微软雅黑";
   font-size: 12px;
@@ -197,10 +220,9 @@ export default{
   color: #004fd9;
 }
 
-.login-button:hover{
+.login-button:hover {
   cursor: pointer;
   background: #004fd9;
   color: white;
 }
-
 </style>

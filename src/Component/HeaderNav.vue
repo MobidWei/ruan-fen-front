@@ -1,7 +1,8 @@
 <template>
     <div class="full-width">
         <div class="header flex align-center">
-            <div class="header__conta">
+          <Nav_bar></Nav_bar>
+            <!-- <div class="header__conta">
                 <el-row>
                     <el-col :span="4">
                         <div class="logo flex align-center">
@@ -37,7 +38,7 @@
                         </div>
                     </el-col>
                 </el-row>
-            </div>
+            </div> -->
         </div>
         <div class="search__bar flex align-center">
             <div class="search__bar__inner flex align-center flex-1">
@@ -96,7 +97,7 @@
 
 <script lang="ts" setup>
 import {ref, defineEmits} from 'vue'
-import Nav_bar from "@/Component/Navbar2.vue";
+import Nav_bar from "@/component/header.vue";
 import {defineProps} from "vue/dist/vue";
 
 const currentField = ref('主题');
@@ -114,10 +115,23 @@ const selectTheme = (value: string) => {
 };
 interface Props {
     page: number
+    field: string;
+    question: string;
 }
 
 const props = defineProps<Props>();
-
+// eslint-disable-next-line vue/no-setup-props-destructure
+currentField.value = props.field
+const searchParams = ref({
+    search: ''
+    , field:'articleName'
+    ,page:props.page
+    ,pageSize:20
+})
+// eslint-disable-next-line vue/no-setup-props-destructure
+searchParams.value.field = props.field
+// eslint-disable-next-line vue/no-setup-props-destructure
+searchParams.value.search=props.question
 const emit = defineEmits<{
     (event: 'sendData', payload: { search: string ,field: string}): void;
     (event: 'requestSearch', payload: {field: string,page: number,pageSize: number }): void;
@@ -157,12 +171,6 @@ let submenu = [
 
 let currentLang = ref<number>(0)
 let currentId = ref<number>(0)
-const searchParams = ref({
-    search: ''
-    , field:'articleName'
-    ,page:props.page
-    ,pageSize:20
-})
 const handleMenu = (item: MenuItem) => {
     currentId.value = item.id
 }
@@ -176,7 +184,7 @@ const changeLang = (item: LangItem) => {
   border-top: 3px solid #1f4ed1;
   background: #f7f7f7;
   border-bottom: 1px solid #e6e9f0;
-  height: 96px;
+  height: fit-content;
   width: 100%;
 
   &__conta {

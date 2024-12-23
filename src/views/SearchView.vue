@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <HeaderNav @sendData="handleData" @requestSearch="handleSearchRequest"/>
+        <HeaderNav :field="field" :question="question" @sendData="handleData" @requestSearch="handleSearchRequest"/>
         <SearchResult :question="sharedData" :page="currentPage" :articles="articleList"/>
         <div class="pagination-container">
             <el-pagination
@@ -15,15 +15,24 @@
 </template>
 
 <script lang="ts" setup>
-import HeaderNav from "@/Component/HeaderNav/HeaderNav.vue";
-import SearchResult from "@/Component/SearchResult/SearchResult.vue";
-import {ref, watch} from 'vue';
+import HeaderNav from "@/component/HeaderNav.vue";
+import SearchResult from "@/component/SearchResult.vue";
+import {ref, watch,defineProps} from 'vue';
 import {searchArticlesByFieldWithPage} from "@/api/Search/search";
 const sharedData = ref<{ search: string,field:string}>({search: '',field:''});
-
 const handleData = (data: { search: string ,field:string}) => {
   sharedData.value = data;
 };
+interface Props {
+  field: string;
+  question: string;
+}
+const props = defineProps<Props>()
+const field = props.field===undefined?"主题":props.field
+const question = props.question===undefined?'':props.question
+console.log(field,question)
+// field = "来源";
+// question = "1234";
 // 定义响应式变量
 const currentPage = ref<number>(1);
 const totalItems = ref<number>(1000); // 总条目数

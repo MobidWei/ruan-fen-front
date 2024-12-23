@@ -1,20 +1,19 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-background" @mouseenter="Hover" @mouseleave="UnHover">
-    <div class="container-fluid" :style="color">
-      <a class="navbar-brand" href="#" style="display: flex;align-items: center;font-size: 26px">
-        <img :src="nav_data.logo_img" alt="" width="50" height="50"/>
-        {{ nav_img_head }}
-      </a>
+  <nav class="navbar navbar-expand-lg navbar-background" style="background-color: white;">
+    <div class="container-fluid" style="background-color: #6ea1f2DD;">
+      <router-link to="/" style="display: inline-block; align-items: center;font-size: 26px">
+        <img src="../assets/logo-无背景.png" alt="" height="50"/>
+      </router-link>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
               aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
+      <div class="collapse navbar-collapse" id="navbarNav" style="margin-left: 30px; font-family: 黑体;">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li v-for="(item, index) in nav_data.title_data" :key="index"
               class="nav-item navbar-item">
-            <div class="nav-link"  :data-bs-target="item.offCanvas_id"
-                 @click="off_canvas_choice(1,index); drawer=true">
+            <div class="nav-link" data-bs-toggle="offcanvas" :data-bs-target="item.offCanvas_id"
+                 aria-controls="offcanvasTop" @click="off_canvas_choice(1,index)">
               {{ item.name }}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                    class="bi bi-chevron-down" viewBox="0 0 16 16">
@@ -23,12 +22,12 @@
               </svg>
             </div>
           </li>
-          <li class="nav-item navbar-item">
+          <!-- <li class="nav-item navbar-item">
             <a v-for="(item, index) in nav_data.link_data" :key="index" :href="item.link"
                class="nav-link">
               {{ item.name }}
             </a>
-          </li>
+          </li> -->
         </ul>
         <div class="navbar-text navbar-right">
           <img :src="user_data.avatar_img" alt="" width="50" height="50" style="border-radius: 50%"/>
@@ -42,8 +41,8 @@
     </div>
   </nav>
 
-  <el-drawer v-model="drawer" direction="ttb" size="40%" :with-header = false
-       style="background-color: rgba(142,145,149,0.89)">
+  <div class="offcanvas offcanvas-top navbar-canvas" tabindex="-1" id="off_canvas_1" aria-labelledby="offcanvasTop"
+       style="background-color: rgba(142,145,149,0.69); height: 300px">
     <div class="container-lg">
       <div class="row" style="margin-top: 50px">
         <div class="col-2" style="border-right: 1px solid #c8cacd">
@@ -53,19 +52,19 @@
               读者服务
             </div>
           </div>
-          <div class=" d-grid gap-2">
+          <!-- <div class=" d-grid gap-2">
             <div class="btn choice" :class="offCanvasSettings.choice1 === 1?'btn-primary':'btn-outline-light'"
                  @click="off_canvas_choice(1,1)">
               作者服务
             </div>
-          </div>
-          <div class=" d-grid gap-2">
+          </div> -->
+          <!-- <div class=" d-grid gap-2">
             <div class="btn choice" :class="offCanvasSettings.choice1 === 2?'btn-primary':'btn-outline-light'"
                  @click="off_canvas_choice(1,2)"
                  style="border-bottom-left-radius: 10px;border-bottom-right-radius: 10px">
               帮助
             </div>
-          </div>
+          </div> -->
 
         </div>
         <div class="col-4" style="border-right: 1px solid #c8cacd;height: 100%">
@@ -87,36 +86,22 @@
         </div>
       </div>
     </div>
-  </el-drawer>
+  </div>
 
 </template>
 
 <script>
 export default {
   name: 'Nav_bar',
-  data() {
-    return {
-      drawer: false,
+  data(){
+    return{
       nav_data: {
         logo_img: 'images/logo.png',
         title_data: [
           {
             name: "读者服务",
             offCanvas_id: "#off_canvas_1",
-          }, {
-            name: "作者服务",
-            offCanvas_id: "#off_canvas_1",
-          }, {
-            name: "帮助",
-            offCanvas_id: "#off_canvas_1",
-          }
-        ],
-        link_data: [
-          {
-            name: "联系我们",
-            link: "#",
-          },
-
+          }, 
         ],
       },
       user_data: {
@@ -132,40 +117,18 @@ export default {
           [
             {
               url: "#",
-              title: "资源推荐",
-              description: "我们会根据您的研究兴趣和历史浏览记录，\n推荐相关的学术资源，\n如论文、书籍、会议资料等。"
+              title: "登陆注册",
+              description: "进行登录，如果没有账号可以进行注册。"
             },
             {
               url: "#",
-              title: "引用管理",
-              description: "我们可以帮助您管理引用的文献，\n一键生成不同格式的引用（如APA、MLA、Chicago等）。"
+              title: "普通检索",
+              description: "最简单的检索方式，适合绝大多数人的检索需求。"
             },
             {
               url: "#",
-              title: "个性化检索",
+              title: "高级检索",
               description: "您可以根据自己的实际需求，\n个性化定制检索条件，设置不同的筛选器，\n检索界面清晰易用，快去试试吧！"
-            },
-          ],
-          [
-            {
-              url: "#",
-              title: "门户认领",
-              description: "若您是科研人员，\n可以前往认领自己的门户，\n通过审核后可以获得对自己学术成果的管理权限。"
-            },
-            {
-              url: "#",
-              title: "投稿管理",
-              description: "您如果有自己的门户，\n可以前往投稿，在自己的门户中上传全新的学术成果分享给读者。"
-            },
-            {
-              url: "#",
-              title: "出版合作",
-              description: "若您有意向，\n平台可以提供与出版社或学术期刊的合作机会，\n推广您的作品。"
-            },
-            {
-              url: "#",
-              title: "同行评审",
-              description: "平台为您提供了同行评审服务，\n确保学术资源的质量，\n增强平台的学术氛围。"
             },
           ],
           [
@@ -186,14 +149,11 @@ export default {
             },
           ]
         ]
-      },
-      scrollRatio: 0,
-      color: "background-color: #6ea1f2ff",
-      hover: false,
+      }
 
     }
   },
-  methods: {
+  methods:{
     log_in() {
       this.user_data.login = true;
       this.user_data.avatar_img = "images/avatar.jpg";
@@ -221,52 +181,17 @@ export default {
         return "border-bottom-left-radius: 10px;border-bottom-right-radius: 10px";
       }
       return "";
-    },
-    updateScrollRatio() {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight;
-      const windowHeight = window.innerHeight;
-      // 计算滚动比例
-      this.scrollRatio = scrollTop / (docHeight - windowHeight);
-      this.color = this.getColor();
-    },
-    getColor() {
-      let color = "background-color: #6ea1f2";
-      let opacity = 1;
-      if (this.scrollRatio >= 0.5 && this.scrollRatio <= 0.9) {
-        opacity = Math.floor((2.25 - 2.5 * this.scrollRatio) * 255);
-        let hex = opacity.toString(16);
-        color += hex;
-        console.log(color)
-      }
-      else if (this.scrollRatio > 0.9) {
-        color += "00"
-      }
-      else{
-        color += "ff"
-      }
-      return color;
-    },
-    Hover(){
-      this.color = "background-color: #6ea1f2";
-    },
-    UnHover(){
-      this.color = this.getColor()
     }
 
-  },
-  mounted() {
-    window.addEventListener('scroll', this.updateScrollRatio);
-  },
+  }
 }
 </script>
 
 <style scoped>
 .navbar-background {
-  position: fixed;
   padding: 0;
   width: 100%;
-  height: 80px;
+  height: 60px;
   z-index: 99;
 }
 
@@ -282,7 +207,6 @@ export default {
   cursor: pointer;
   font-size: 22px;
   margin-right: 10px;
-  border-bottom: 1px solid black;
 
 }
 
