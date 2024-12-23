@@ -8,15 +8,106 @@
       <div class="content-block">
         <div class="content">
           <div class="doc">
-            <div id="duplicated-author">
+            <div class="shadow-box" ref="doc" @click="updateHeight">
+              <el-form inline>
+                <el-form-item
+                  v-for="(inputGroup, index) in inputGroups"
+                  :key="index"
+                  style="width: 100%; margin-top: 20px; margin-left: 30px"
+                >
+                  <el-select
+                    v-model="inputGroup.value"
+                    placeholder="Select"
+                    style="width: 100px"
+                    :disabled="index == 0"
+                  >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                  <el-input
+                    v-model="input3"
+                    style="max-width: 600px"
+                    placeholder="Please input"
+                    class="input-with-select"
+                  >
+                    <template #prepend>
+                      <el-select
+                        v-model="inputGroup.select"
+                        placeholder="Select"
+                        style="width: 115px"
+                      >
+                        <el-option label="主题" value="1" />
+                        <el-option label="作者" value="2" />
+                        <el-option label="关键词" value="3" />
+                        <el-option label="摘要" value="4" />
+                        <el-option label="领域" value="5" />
+                        <el-option label="文献来源" value="6" />
+                      </el-select>
+                    </template>
+                  </el-input>
+                  <el-button
+                    type="success"
+                    :icon="Plus"
+                    round
+                    plain
+                    @click="addInputGroup"
+                  />
+                  <el-button
+                    type="danger"
+                    :icon="Delete"
+                    round
+                    @click="removeInputGroup(index)"
+                  />
+                </el-form-item>
+              </el-form>
+              <div class="input_limit_block" v-if="false">
+                <div
+                  class="input_limit_block_left"
+                  style="border: 0px; margin-top: 2.5px"
+                >
+                  时间范围：
+                </div>
+              </div>
+              <hr class="line_type" />
+              <div class="mb-4">
+                <el-button
+                  type="primary"
+                  :icon="Search"
+                  style="margin-left: 50%"
+                  @click="search"
+                  >检索</el-button
+                >
+              </div>
+            </div>
+            <div id="duplicated-author" :style="{ height: rightHeight }">
               <p class="get-author">
-                <span style="margin-right: 18px; font-size: 20px; color: #333"
+                <span
+                  style="
+                    margin-right: 18px;
+                    font-size: 16px;
+                    color: #333;
+                    font-family: '黑体';
+                  "
                   >高级检索使用方法</span
                 >
               </p>
-              <hr />
-              <div class="scrollable-area">
-                <div style="line-height: 1.5">
+              <hr style="margin-top: 5px; margin-bottom: 10px" />
+              <div
+                class="scrollable-area"
+                :style="{ height: rightContentHeight }"
+              >
+                <div
+                  style="
+                    line-height: 2;
+                    font-size: 15px;
+                    font-family: '宋体';
+                    letter-spacing: 1px;
+                  "
+                >
                   高级检索支持使用运算符*、+、-、''、""、()进行同一检索项内多个检索词的组合运算，检索框内输入的内容不得超过120个字符。
                   输入运算符*(与)、+(或)、-(非)时，前后要空一个字节，优先级需用英文半角括号确定。
                   若检索词本身含空格或*、+、-、()、/、%、=等特殊符号，进行多词组合运算时，为避免歧义，须将检索词用英文半角单引号或英文半角双引号引起来。<br />
@@ -33,98 +124,34 @@
                 </div>
               </div>
             </div>
-            <div class="shadow-box">
-              <div
-                v-for="(inputGroup, index) in inputGroups"
-                :key="index"
-                class="input_limit_block"
-              >
-                <div class="input_limit_block_left" v-show="index > 0">
-                  <select
-                    id="options"
-                    v-model="inputGroup.selectedOption"
-                    class="choose"
-                    style="height:100%"
-                  >
-                    <option
-                      v-for="option in options"
-                      :key="option.value"
-                      :value="option.value"
-                    >
-                      {{ option.text }}
-                    </option>
-                  </select>
-                </div>
-                <div
-                  class="input_limit_block_left"
-                  v-show="index == 0"
-                  style="border: none"
-                ></div>
-                <div class="input_limit_block_right">
-                  <el-input
-                    v-model="inputGroup.input"
-                    style="width: 600px"
-                    placeholder="Please input"
-                    class="input-with-select"
-                  >
-                    <template #prepend>
-                      <el-select
-                        v-model="inputGroup.label"
-                        placeholder="Select"
-                        style="width: 115px; height: 25px ;border:none;size=100px"
-                      >
-                        <el-option label="作者" value="1" />
-                        <el-option label="主题" value="2" />
-                        <el-option label="全文" value="3" />
-                        <el-option label="文献来源" value="4" />
-                        <el-option label="摘要" value="5" />
-                        <el-option label="关键词" value="6" />
-                        <el-option label="分类" value="7" />
-                      </el-select>
-                    </template>
-                    <template #append>
-                      <el-button :icon="Search" />
-                    </template>
-                  </el-input>
-                </div>
-                <button class="plus-button" @click="removeInputGroup(index)">
-                  -
-                </button>
-                <button class="plus-button" @click="addInputGroup">+</button>
-              </div>
-              <!-- 添加新输入框组的按钮 -->
-
-              <div class="input_limit_block"></div>
-              <div class="input_limit_block">
-                <div
-                  class="input_limit_block_left"
-                  style="border: 0px; margin-top: 2.5px"
-                >
-                  时间范围：
-                </div>
-              </div>
-              <hr class="line_type" />
-              <div class="mb-4">
-                <div class="input_limit_block" style="  margin-bottom: 10px;">
-                  <button class="button_search">检索</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <!-- <component :is="currentComponent" /> -->
+  <search-result v-if="hasSearch" :url="url" :param="param" />
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
 import header from "../component/header.vue";
+import SearchResult from "../component/SearchResult.vue";
+import { Plus, Delete, Search } from "@element-plus/icons-vue";
+import { request } from "../utils/http/request.ts";
 
 export default defineComponent({
-  components: { "header-view": header },
+  components: {
+    "header-view": header,
+    "search-result": SearchResult,
+  },
   data() {
     return {
+      Plus,
+      Delete,
+      Search,
+      url: "",
+      param: "",
       inputGroups: [
         {
           input: "",
@@ -141,28 +168,25 @@ export default defineComponent({
       input: "",
       label: "",
       selectedOption: "option1",
+
+      rightHeight: 0,
+      rightContentHeight: 0,
+      docHeight: 0,
+      hasSearch: false,
+
       options: [
-        { value: "option1", text: "AND" },
-        { value: "option2", text: "OR" },
-        { value: "option3", text: "NOT" },
+        { value: "option1", label: "AND" },
+        { value: "option2", label: "OR" },
+        { value: "option3", label: "NOT" },
       ],
       selectedItem: "option1",
-      Items: [
-        { value: "option1", text: "主题" },
-        { value: "option2", text: "作者" },
-        { value: "option3", text: "关键词" },
-        { value: "option3", text: "全文" },
-        { value: "option3", text: "篇名" },
-        { value: "option3", text: "摘要" },
-        { value: "option3", text: "文献来源" },
-      ],
     };
   },
   setup() {
     const textBoxes = ref([{ value: "" }]);
 
     function addTextBox() {
-      textBoxes.value.push({ value: "" }); // 创建一个具有默认空字符串的对象
+      textBoxes.value.push({ value: "" });
     }
 
     function removeTextBox() {
@@ -225,9 +249,22 @@ export default defineComponent({
       prices,
     };
   },
+  mounted() {
+    this.docHeight = this.$refs.doc.offsetHeight;
+    this.rightHeight = `${this.docHeight}px`;
+    this.rightContentHeight = `${this.docHeight - 90}px`;
+    window.addEventListener("resize", this.updateHeight);
+  },
+  beforeUnmount() {
+    window.removeEventListener("resize", this.updateHeight);
+  },
   methods: {
+    updateHeight() {
+      this.docHeight = this.$refs.doc.offsetHeight;
+      this.rightHeight = `${this.docHeight}px`;
+      this.rightContentHeight = `${this.docHeight - 90}px`;
+    },
     addInputGroup() {
-      // 添加一个新的输入框组
       this.inputGroups.push({
         input: "",
         label: "",
@@ -235,10 +272,12 @@ export default defineComponent({
       });
     },
     removeInputGroup(index) {
-      // 如果输入框组数量大于1，则移除指定的输入框组
       if (this.inputGroups.length > 1) {
         this.inputGroups.splice(index, 1);
       }
+    },
+    search() {
+      this.hasSearch = true;
     },
   },
 });
@@ -271,8 +310,7 @@ export default defineComponent({
 .content-block {
   display: table;
   position: relative;
-  width: 96%;
-  min-height: 900px;
+  width: 100%;
   margin: 0 auto;
   font-family: "Microsoft yahei";
   border: 1px solid #e4e4e4;
@@ -291,7 +329,7 @@ export default defineComponent({
 
 .doc {
   min-width: 960px;
-  width: 79%;
+  width: 85%;
   margin: 0 auto 30px;
 }
 
@@ -306,21 +344,23 @@ export default defineComponent({
 }
 
 #duplicated-author {
-  height: 300px;
-  float: right;
+  display: inline-block;
+  vertical-align: top;
   max-width: 36%;
   min-width: 340px;
-  padding: 2px 22px 8px;
-  /* margin-left: 300px; */
-  /* margin-top: 20px; */
-  margin-bottom: 24px;
-  background-color: #f9f9f9;
+  height: 100%;
+
+  padding: 8px 22px 8px;
+  margin-left: 20px;
+  background-color: white;
+  border: 1px solid rgba(128, 128, 128, 0.6);
 }
 
 .get-author {
-  line-height: 38px;
+  line-height: 30px;
   color: #999;
   overflow: hidden;
+  margin: 0;
 }
 
 .get-author a {
@@ -425,28 +465,27 @@ export default defineComponent({
 }
 
 .scrollable-area {
-  width: 330px; /* 设置区域的宽度 */
-  height: 200px; /* 设置区域的高度 */
-  border: 1px solid #ccc; /* 添加边框以便更清晰地看到区域 */
-  overflow-y: auto; /* 允许垂直滚动条出现 */
-  padding: 10px; /* 添加内边距以提供内容空间 */
-  box-sizing: border-box; /* 确保宽度和高度包括边框和内边距 */
+  width: 330px;
+  height: 200px;
+  border: 1px solid rgba(128, 128, 128, 0.1);
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 1px 0 0 0 rgba(0, 0, 0, 0.2);
 }
 
 .content {
-  height: 600px; /* 设置内容的高度，使其超出容器的高度以触发滚动条 */
-  background-color: #fcfcfc; /* 设置背景颜色以便更清晰地看到内容 */
+  background-color: #fcfcfc;
 }
 
 .shadow-box {
-  /* display: block; */
-  width: 900px; /* 设置宽度 */
-  /* height: 300px; 设置高度 */
-  background-color: #fff; /* 设置背景颜色 */
-  border: 1px solid #ccc; /* 设置边框 */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 设置阴影效果 */
-  margin-left: 0px; /* 设置外边距，使框居中 */
-  margin-top: 30px;
+  display: inline-block;
+  width: 900px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding-right: 20px;
+  padding-top: 20px;
 }
 .input_limit_block {
   display: flex;
@@ -525,15 +564,15 @@ export default defineComponent({
 .line_type {
   color: #eae9e9;
 }
-.button_search{
+.button_search {
   margin-left: 42%;
- text-align:100%;
-height: 100%;
-color: #ffffff;
-width: 150px;
-background-color: #fd7010;
-border: #fd7010;
-font-size: 20px;
-letter-spacing:0.8em;
+  text-align: 100%;
+  height: 100%;
+  color: #ffffff;
+  width: 150px;
+  background-color: #fd7010;
+  border: #fd7010;
+  font-size: 20px;
+  letter-spacing: 0.8em;
 }
 </style>

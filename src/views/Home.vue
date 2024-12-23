@@ -7,15 +7,19 @@
     </el-dialog>
     <!--  导航栏-->
     <Nav_bar></Nav_bar>
-    <div class="" style="width: 100%;height: 150px"></div>
+    <div class="" style="width: 100%; height: 150px; padding-top: 50px;">
+      <div style="margin: 0 auto; width: fit-content;">
+        <img src="../assets/logo-无背景.png" alt="" style="height: 70px">
+      </div>
+    </div>
     <div class="container text-center">
       <div class="row">
-        <div class="col-md-1 ">1</div>
-        <div class="col-md-10 ">
+        <div class="col-md-1 "></div>
+        <div class="col-md-10 " >
           <div class="container">
-            <div class="row">
+            <div class="row" style="border: 1px solid rgba(128, 128, 128, 0.4); border-radius: 10px; margin-bottom: 40px; padding-bottom: 30px; padding-left: 10px; padding-right: 20px;">
               <div class="col-1" style="padding: 5px 0">
-                <button class="btn btn-outline-light" type="button" style="width: 100%;min-height: 80px"
+                <button class="btn btn-outline-light" type="button" style="width: 100%; min-height: 80px; color: black;"
                         data-bs-toggle="dropdown" aria-expanded="false">
                   {{ search_setting.types[search_setting.type].value }}
                   <br>
@@ -34,15 +38,13 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-11" style="padding: 5px">
+              <div class="col-11" style="padding: 5px" >
                 <div class="container">
                   <div class="row">
                     <button type="button" class="btn header-card"
-                            :class="search_setting.mode===0?'btn-light':'btn-outline-dark'" @click="change_mode(0)">普通检索
+                            :class="search_setting.mode===0?'btn-outline-dark':'btn-light'" @click="change_mode(0)">普通检索
                     </button>
-                    <button type="button" class="btn header-card"
-                            :class="search_setting.mode===1?'btn-light':'btn-outline-dark'" @click="change_mode(1)">高级检索
-                    </button>
+                    <router-link to='AdvancedSearch' style="width: fit-content; line-height: 40px;">点击前往高级检索</router-link>
                   </div>
                 </div>
                 <div class="input-group input-group-md">
@@ -66,7 +68,7 @@
                     </svg>
                   </button>
                 </div>
-                <div style="width: 100%; align-items: center">
+                <!-- <div style="width: 100%; align-items: center">
                   <button class="btn btn-outline-primary" type="button" style="margin: 20px" @click="select_all">全选
                   </button>
                   <div class="form-check form-switch form-check-inline" v-for="(item,index) in search_setting.choices"
@@ -75,16 +77,16 @@
                            v-model="item.choose" @change="save_choices">
                     <label class="form-check-label" :for="'flexSwitchCheck'+index">{{ item.name }}</label>
                   </div>
-                </div>
+                </div> -->
 
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-1 ">3</div>
+        <div class="col-md-1 "></div>
       </div>
       <div class="row">
-        <div class="card" style="width: 100%;background-color: #ffffff8D;margin: 10px 0">
+        <!-- <div class="card" style="width: 100%;background-color: #ffffff;margin: 10px 0">
           <div class="card-body">
             <div style="display: flex;align-items: center; justify-content: left">
               <svg style="margin-right: 10px" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -105,7 +107,7 @@
 
             </div>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-8 " style="padding-left: 0;">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
@@ -306,13 +308,11 @@
     <!--  侧栏页面-->
 
   </div>
-
-
 </template>
 
 <script>
 import {ElMessage} from "element-plus";
-import Nav_bar from "@/components/Navbar.vue";
+import Nav_bar from "@/component/header.vue";
 
 
 export default {
@@ -626,10 +626,10 @@ export default {
 }
 
 .page-background {
-  background-image: url("/public/images/background.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  background-color: #f9f9f9;
 }
 
 
