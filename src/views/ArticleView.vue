@@ -45,6 +45,16 @@
   //当前所显示的那些页（例如1，2，3...5）中显示1、2、3、5
   let curPageList = ref<number[]>([])
 
+  class Comment{
+    constructor(public content: string, public author: string, public time: Date) {
+      this.content = content;
+      this.author = author;
+      this.time = time;
+    }
+  }
+  //评论部分
+  let comments = ref<Comment[]>([])
+
   const connectKeywords = (keywords: string[]) => {
     keywordsContent.value = ""
     for (let i = 0; i < keywords.length - 1; i++) {
@@ -89,6 +99,7 @@
     // initializeRefPageList();
     curPage.value=1
     changePage(1)
+    comments.value.push(new Comment("评论1", "作者1", new Date()))
   })
 
 </script>
@@ -97,8 +108,8 @@
   <div id="outermostContainer">
 <!--    <Navbar3 />-->
     <div id="contentContainer">
-      <el-container>
-        <el-aside :class="collapsed ? 'hiddenSideBar' : 'outerSideBar'">
+      <el-container style="border: 1px solid #c93d3d;">
+        <el-aside :class="collapsed ? 'hiddenOuterSideBar' : 'outerSideBar'">
           <!--    控制收起和展开的按钮      -->
           <el-button @click="modifySideState" :class="collapsed ? 'hiddenSideBarButton' : 'sideBarButton'">{{sideBarButton}}</el-button>
           <h5 style="margin-top: 60px;margin-left: 15px" :class="collapsed ? 'hiddenSideBar' : ''">文章目录</h5>
@@ -173,6 +184,11 @@
           </el-main>
         </el-container>
       </el-container>
+      <div class="comment">
+        <div class="comment-title">
+          <h1>评论</h1>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -186,13 +202,8 @@
   }
 
   #contentContainer {
-    min-height: 100%;
+    //min-height: 100%;
     width: 96%;
-    border: 1px solid #c93d3d;
-  }
-
-  .el-container {
-    height: 100%;
   }
 
   .outerSideBar {
@@ -219,7 +230,14 @@
     position:sticky;
   }
 
+  .hiddenOuterSideBar {
+    height:0;
+    overflow: hidden;
+    width: 0;
+  }
+
   .hiddenSideBar {
+    height: 0;
     overflow: hidden;
     width: 0;
   }
@@ -294,11 +312,11 @@
     border-top: 1px solid #c93d3d;
     padding-top: 20px;
     font-size: 28px;
-    height: 80px;
+    height: 30px;
     width: 79%;
-    margin: 20px auto 0;
     display: flex;
     justify-content: center;
+    margin: 20px auto 40px;
   }
 
   .reference{
@@ -311,4 +329,30 @@
     margin-right: auto;
     padding-top: 20px;
   }
+
+  .comment{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    border: 1px solid #c93d3d;
+    align-items: center;
+  }
+
+  .comment-title{
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    border-bottom: 1px solid #c93d3d;
+    width: 87%;
+  }
+
+  .comment-content{}
+
+  .comment-author{}
+
+  .comment-text{}
+
+  .comment-time{}
+
+  .comment-pagination{}
 </style>
