@@ -54,7 +54,10 @@ const routes: Array<RouteRecordRaw> = [
     path: '/search',
     name: 'search',
     component: () => import('../views/SearchView.vue'),
-    props: route => ({ filed:route.query.filed,question:route.query.question })
+    props: route => ({
+      field: route.query.field,
+      question: route.query.question
+    })
   },
   {
     path:'/ResearchUser',

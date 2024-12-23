@@ -97,7 +97,7 @@
 
 <script lang="ts" setup>
 import {ref, defineEmits, onMounted} from 'vue'
-import Nav_bar from "@/component/header.vue";
+import Nav_bar from "@/Component/header.vue";
 import {defineProps} from "vue/dist/vue";
 
 const currentField = ref('主题');
