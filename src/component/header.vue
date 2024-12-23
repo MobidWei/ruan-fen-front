@@ -14,7 +14,7 @@
           >
         </div>
         <div class="index-block">
-          <router-link to="/advancedSearch" class="index-block-content"
+          <router-link to="/portalClaim" class="index-block-content"
             >高级检索</router-link
           >
         </div>
@@ -29,14 +29,14 @@
               :class="{ 'icon-bangzhu1': hovered, 'icon-icon--help': !hovered }"
             ></div>
           </div>
-          <div class="login" v-if="!store.state.hasLogin.value">
+          <div class="login" v-if="store.state.hasLogin == false">
             <router-link to="/login">
               <button class="login-button">
                 个人登录
               </button>
             </router-link>
           </div>
-          <div class="login" v-if="store.state.hasLogin.value">
+          <div class="login" v-if="store.state.hasLogin == true">
             <button class="login-button">
               退出登录
             </button>

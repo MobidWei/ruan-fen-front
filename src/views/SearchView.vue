@@ -1,6 +1,6 @@
 <template>
     <div class="wrap">
-        <HeaderNav :field="field" :question="question" @sendData="handleData" @requestSearch="handleSearchRequest"/>
+        <HeaderNav :page="currentPage" :field="field" :question="question" @sendData="handleData" @requestSearch="handleSearchRequest"/>
         <SearchResult :question="sharedData" :page="currentPage" :articles="articleList"/>
         <div class="pagination-container">
             <el-pagination
@@ -54,15 +54,16 @@ const articleList = ref<any[]>([]);
 
 // 当 SiblingA 发起搜索请求，带有要搜索的 field, text, page, pageSize
 const handleSearchRequest = async (
-  payload: { field: string; text: string; page: number; pageSize: number }
+  payload: { field: string; search: string; page: number; pageSize: number }
 ) => {
   try {
     const response = await searchArticlesByFieldWithPage(
       payload.field,
-      payload.text,
+      payload.search,
       payload.page,
       payload.pageSize
     );
+    console.log(response);
     if (response.code === 200) {
       // 返回值中 response.data = List<ArticleDoc>
       articleList.value = response.data;
