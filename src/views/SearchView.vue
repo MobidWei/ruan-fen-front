@@ -6,8 +6,8 @@
 </template>
 
 <script lang="ts" setup>
-import HeaderNav from "../component/HeaderNav/HeaderNav.vue";
-import SearchResult from "../component/SearchResult/SearchResult.vue";
+import HeaderNav from "../component/HeaderNav.vue";
+import SearchResult from "../component/SearchResult.vue";
 import Nav_bar from "@/component/Navbar2.vue";
 
 </script>

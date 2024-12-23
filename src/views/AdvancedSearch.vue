@@ -13,7 +13,7 @@
                 <el-form-item
                   v-for="(inputGroup, index) in inputGroups"
                   :key="index"
-                  style="width: 100%; margin-top: 20px; margin-left: 30px;"
+                  style="width: 100%; margin-top: 20px; margin-left: 30px"
                 >
                   <el-select
                     v-model="inputGroup.value"
@@ -28,27 +28,27 @@
                       :value="item.value"
                     />
                   </el-select>
-                    <el-input
-                      v-model="input3"
-                      style="max-width: 600px"
-                      placeholder="Please input"
-                      class="input-with-select"
-                    >
-                      <template #prepend>
-                        <el-select
-                          v-model="inputGroup.select"
-                          placeholder="Select"
-                          style="width: 115px"
-                        >
-                          <el-option label="主题" value="1" />
-                          <el-option label="作者" value="2" />
-                          <el-option label="关键词" value="3" />
-                          <el-option label="摘要" value="4" />
-                          <el-option label="领域" value="5" />
-                          <el-option label="文献来源" value="6" />
-                        </el-select>
-                      </template>
-                    </el-input>
+                  <el-input
+                    v-model="input3"
+                    style="max-width: 600px"
+                    placeholder="Please input"
+                    class="input-with-select"
+                  >
+                    <template #prepend>
+                      <el-select
+                        v-model="inputGroup.select"
+                        placeholder="Select"
+                        style="width: 115px"
+                      >
+                        <el-option label="主题" value="1" />
+                        <el-option label="作者" value="2" />
+                        <el-option label="关键词" value="3" />
+                        <el-option label="摘要" value="4" />
+                        <el-option label="领域" value="5" />
+                        <el-option label="文献来源" value="6" />
+                      </el-select>
+                    </template>
+                  </el-input>
                   <el-button
                     type="success"
                     :icon="Plus"
@@ -74,21 +74,40 @@
               </div>
               <hr class="line_type" />
               <div class="mb-4">
-                <el-button type="primary" :icon="Search" style="margin-left: 50%;" @click="search">检索</el-button>
+                <el-button
+                  type="primary"
+                  :icon="Search"
+                  style="margin-left: 50%"
+                  @click="search"
+                  >检索</el-button
+                >
               </div>
             </div>
             <div id="duplicated-author" :style="{ height: rightHeight }">
               <p class="get-author">
-                <span style="margin-right: 18px; font-size: 16px; color: #333; font-family: '黑体';"
+                <span
+                  style="
+                    margin-right: 18px;
+                    font-size: 16px;
+                    color: #333;
+                    font-family: '黑体';
+                  "
                   >高级检索使用方法</span
                 >
               </p>
-              <hr style="margin-top: 5px; margin-bottom: 10px;"/>
+              <hr style="margin-top: 5px; margin-bottom: 10px" />
               <div
                 class="scrollable-area"
                 :style="{ height: rightContentHeight }"
               >
-                <div style="line-height: 2; font-size: 15px; font-family: '宋体'; letter-spacing: 1px;">
+                <div
+                  style="
+                    line-height: 2;
+                    font-size: 15px;
+                    font-family: '宋体';
+                    letter-spacing: 1px;
+                  "
+                >
                   高级检索支持使用运算符*、+、-、''、""、()进行同一检索项内多个检索词的组合运算，检索框内输入的内容不得超过120个字符。
                   输入运算符*(与)、+(或)、-(非)时，前后要空一个字节，优先级需用英文半角括号确定。
                   若检索词本身含空格或*、+、-、()、/、%、=等特殊符号，进行多词组合运算时，为避免歧义，须将检索词用英文半角单引号或英文半角双引号引起来。<br />
@@ -110,14 +129,16 @@
       </div>
     </div>
   </div>
-  <search-result v-if="hasSearch" />
+  <!-- <component :is="currentComponent" /> -->
+  <search-result v-if="hasSearch" :url="url" :param="param" />
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
 import header from "../component/header.vue";
-import SearchResult from "../component/SearchResult/SearchResult.vue";
+import SearchResult from "../component/SearchResult.vue";
 import { Plus, Delete, Search } from "@element-plus/icons-vue";
+import { request } from "../utils/http/request.ts";
 
 export default defineComponent({
   components: {
@@ -129,6 +150,8 @@ export default defineComponent({
       Plus,
       Delete,
       Search,
+      url: "",
+      param: "",
       inputGroups: [
         {
           input: "",
@@ -163,7 +186,7 @@ export default defineComponent({
     const textBoxes = ref([{ value: "" }]);
 
     function addTextBox() {
-      textBoxes.value.push({ value: "" }); // 创建一个具有默认空字符串的对象
+      textBoxes.value.push({ value: "" });
     }
 
     function removeTextBox() {
@@ -255,7 +278,7 @@ export default defineComponent({
     },
     search() {
       this.hasSearch = true;
-    }
+    },
   },
 });
 </script>
@@ -287,7 +310,7 @@ export default defineComponent({
 .content-block {
   display: table;
   position: relative;
-  width: 96%;
+  width: 100%;
   margin: 0 auto;
   font-family: "Microsoft yahei";
   border: 1px solid #e4e4e4;

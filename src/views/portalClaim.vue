@@ -66,9 +66,10 @@
 
 <script lang='ts'>
 import headerVue from "@/component/header.vue";
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { request } from "../utils/http/request";
 
 export default {
   components: {
@@ -106,7 +107,12 @@ export default {
       }
       return true;
     };
-
+    const createCaptcha = () => {
+      realCaptcha.value = "";
+      for (let i = 0; i < 6; i++) {
+        realCaptcha.value += Math.floor(Math.random() * 10);
+      }
+    };
     const validateCaptcha = (rule: any, value: any, callback: any) => {
       if (value === "") {
         callback(new Error("请输入验证码!"));
@@ -158,15 +164,26 @@ export default {
         });
     };
     const sendConfirm = () => {
-      // 这里是open操作的逻辑
-      console.log("执行open操作");
-      // 例如，可以在这里调用一个方法，传入inputValue作为参数
+      request({
+        url: "/user/sendEmail6",
+        method: "post",
+        params: {
+          email: ruleForm.email,
+          code: realCaptcha,
+        },
+      })
+        .then((response) => {
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     };
 
     const startCountdown = () => {
-      if(!validateEmail()) return;
+      if (!validateEmail()) return;
       canSend.value = false;
-      sendConfirm(); // 执行open操作
+      sendConfirm();
       let intervalId = setInterval(() => {
         if (countdown.value > 0) {
           countdown.value -= 1;
@@ -178,6 +195,9 @@ export default {
       }, 1000);
     };
 
+    onMounted(() => {
+      createCaptcha();
+    });
     return {
       userName,
       ruleForm,
