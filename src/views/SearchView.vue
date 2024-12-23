@@ -28,9 +28,7 @@ interface Props {
   question: string;
 }
 const props = defineProps<Props>()
-// eslint-disable-next-line vue/no-setup-props-destructure
 const field = props.field===undefined?"主题":props.field
-// eslint-disable-next-line vue/no-setup-props-destructure
 const question = props.question===undefined?'':props.question
 console.log(field,question)
 // field = "来源";

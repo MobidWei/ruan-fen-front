@@ -299,7 +299,7 @@ const goDetail = (row: Book) => {
 }
 const changeCheckAll = (e: boolean) => {
 
-    multipleSelection.value = e ? tableData : []
+    multipleSelection.value = e ? props.articles : []
 
     if (e) {
 
