@@ -2,6 +2,7 @@ import type { AxiosInstance, AxiosResponse, AxiosError, AxiosRequestConfig } fro
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import { ServiceResult } from './types'
+import store from '@/store';
 // import { useUserStoreWithOut } from '@/store/modules/user';
 
 function createRequest<T = ServiceResult>(config: AxiosRequestConfig): Promise<T> {
@@ -21,29 +22,27 @@ function createRequest<T = ServiceResult>(config: AxiosRequestConfig): Promise<T
      * 请求拦截器
      */
     instance.interceptors.request.use(config => {
-        // store.getters.token && (config.headers.token = store.getters.token);
-        // config.headers.token = '11111'
-        // if (config.method === 'get') {
-        //   const userStore = useUserStoreWithOut();
-        //   config.params = { ...config.params, token: userStore.getToken };
-        // }
-        // get请求映射params参数
-        // if (config.method === 'get' && config.params) {
-        //     let url = config.url + '?' + tansParams(config.params)
-        //     url = url.slice(0, -1)
-        //     config.params = {}
-        //     config.url = url
-        // }
+        const token = store.state.token;
 
-        return config
+        // 检查请求的URL或配置，决定是否需要添加token
+        if (token != null && shouldAddToken(config)) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        }
+        return config;
+
     })
 
+    function shouldAddToken(config: AxiosRequestConfig) {
+        if(config.url != undefined){
+            return !config.url.startsWith('/user/login') && !config.url.startsWith('/user/register');
+        }
+        return false;
+    }
     /**
      * 响应拦截器
      */
     instance.interceptors.response.use(
         (response: AxiosResponse<any>) => {
-            console.log(response)
 
             const result: any = response.data
             const { code } = result
@@ -107,7 +106,8 @@ function httpErrorHandle(error: AxiosError) {
 
     if (error?.response) {
         const { status } = error.response
-
+        console.log(222)
+        console.log(status)
         switch (status) {
             case 403:
                 msg = `${status} 网络请求被拒绝`

@@ -496,9 +496,6 @@ export default {
         this.alert('搜索内容不能为空！', "error")
         return
       }
-      if (this.choice_num === 0) {
-        this.alert("搜索选项不能全为空", "error")
-      }
       this.search_setting.history = this.search_setting.history.filter((item) => item.value !== this.search_setting.content);
       this.search_setting.history.unshift({value: this.search_setting.content})
       if (this.search_setting.history.length > 20) {

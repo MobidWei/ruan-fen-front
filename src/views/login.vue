@@ -112,11 +112,9 @@ export default {
         },
       })
         .then((response) => {
-          store.dispatch("commitSetToken", response.data.data);
+          store.dispatch("commitSetToken", response.data);
           store.dispatch("commitSetUserName", ruleForm.userName);
           store.dispatch("commitLogin", true);
-          console.log(response);
-          console.log(111);
         })
         .catch((error) => {
           console.log(error.data);

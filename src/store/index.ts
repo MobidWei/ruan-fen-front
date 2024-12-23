@@ -3,26 +3,26 @@ import { ref } from "vue"
 
 export default createStore({
   state: {
-    token: ref(""),
-    userName: ref(""),
-    userId: ref(""),
-    hasLogin: ref(false),
+    token: "",
+    userName: "",
+    userId: "",
+    hasLogin: false,
   },
   getters: {
   },
   mutations: {
     setToken(state, inputToken) {
-      state.token.value = inputToken;
+      state.token = inputToken;
     },
     setUserName(state, inputName) {
       console.log(inputName);
-      state.userName.value = inputName;
+      state.userName = inputName;
     },
     setUserId(state, inputId) {
-      state.userId.value = inputId;
+      state.userId = inputId;
     },
     setLogin(state, hasLogin) {
-      state.hasLogin.value = hasLogin;
+      state.hasLogin = hasLogin;
     }
   },
   actions: {

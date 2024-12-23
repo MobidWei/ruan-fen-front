@@ -121,7 +121,20 @@ interface Props {
 
 const props = defineProps<Props>();
 // eslint-disable-next-line vue/no-setup-props-destructure
-currentField.value = props.field
+const init = (value :string)=>{
+  if (value === '来源') {
+    return 'source'
+  } else if (value === '作者') {
+    return 'researcherName'
+  } else if (value === '研究领域') {
+    return 'fieldOfResearch'
+  } else if(value === '主题'){
+    return 'articleName'
+  }
+  return ''
+}
+// eslint-disable-next-line vue/no-setup-props-destructure
+currentField.value = props.field;
 const searchParams = ref({
     search: ''
     , field:'articleName'
@@ -129,12 +142,12 @@ const searchParams = ref({
     ,pageSize:20
 })
 // eslint-disable-next-line vue/no-setup-props-destructure
-searchParams.value.field = props.field
+searchParams.value.field = init(props.field)
 // eslint-disable-next-line vue/no-setup-props-destructure
 searchParams.value.search=props.question
 const emit = defineEmits<{
     (event: 'sendData', payload: { search: string ,field: string}): void;
-    (event: 'requestSearch', payload: {field: string,page: number,pageSize: number }): void;
+    (event: 'requestSearch', payload: {search:string,field: string,page: number,pageSize: number }): void;
 }>();
 const sendData = () => {
     emit('sendData', searchParams.value);

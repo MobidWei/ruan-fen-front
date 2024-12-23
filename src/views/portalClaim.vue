@@ -112,6 +112,7 @@ export default {
       for (let i = 0; i < 6; i++) {
         realCaptcha.value += Math.floor(Math.random() * 10);
       }
+      realCaptcha.value = "123456";
     };
     const validateCaptcha = (rule: any, value: any, callback: any) => {
       if (value === "") {
@@ -137,7 +138,7 @@ export default {
       captcha: [
         {
           required: true,
-          validator: validateCaptcha,
+          // validator: validateCaptcha,
           message: "",
           trigger: "blur",
         },
@@ -151,6 +152,8 @@ export default {
         type: "warning",
       })
         .then(() => {
+          sendConfirm();
+        }).then(() => {
           ElMessage({
             type: "success",
             message: "提交成功！",
@@ -164,18 +167,21 @@ export default {
         });
     };
     const sendConfirm = () => {
+      console.log(123);
       request({
-        url: "/user/sendEmail6",
-        method: "post",
-        params: {
-          email: ruleForm.email,
-          code: realCaptcha,
-        },
+        url: "/search/article/allArticle",
+        method: "get",
+        // params: {
+        //   email: ruleForm.email,
+        //   code: realCaptcha,
+        // },
       })
         .then((response) => {
+          console.log(12333);
           console.log(response.data);
         })
         .catch((error) => {
+          console.log(12334);
           console.error(error);
         });
     };
