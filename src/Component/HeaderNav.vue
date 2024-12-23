@@ -96,8 +96,8 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, defineEmits} from 'vue'
-import Nav_bar from "@/component/header.vue";
+import {ref, defineEmits, onMounted} from 'vue'
+import Nav_bar from "@/Component/header.vue";
 import {defineProps} from "vue/dist/vue";
 
 const currentField = ref('主题');
@@ -140,7 +140,7 @@ const sendData = () => {
     emit('sendData', searchParams.value);
     emit('requestSearch', searchParams.value);
 };
-
+onMounted(() => { sendData() })
 interface MenuItem {
     id: number;
     label: string;

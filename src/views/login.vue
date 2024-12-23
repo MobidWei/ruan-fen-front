@@ -44,7 +44,7 @@
 </template>
 
 <script lang='ts'>
-import headerVue from "@/component/header.vue";
+import headerVue from "@/Component/header.vue";
 import { ref, reactive, computed, onMounted } from "vue";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";

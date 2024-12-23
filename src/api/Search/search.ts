@@ -75,7 +75,7 @@ export function searchArticlesByFieldWithPage(
   pageSize: number
 ) {
   return request<CommonResponse<any>>({
-    url: `https://127.0.0.1/search/article/${field}/${encodeURIComponent(text)}/${page}/${pageSize}`,
+    url: `https://localhost:8080/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
     method: "get",
   });
 }

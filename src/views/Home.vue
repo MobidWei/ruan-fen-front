@@ -114,7 +114,7 @@
             <h5 class="card-header">周下载排行</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
-                <tbody>
+                <tbody v-if="!loading_hot_articles">
                 <tr v-for="(item, index) in download_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -148,6 +148,13 @@
                   <td>{{ item.time }}</td>
                 </tr>
                 </tbody>
+                <tbody v-else>
+                <tr class="spinner-grow text-info" role="status">
+                </tr>
+                <tr>
+                  加载中...
+                </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -157,7 +164,7 @@
             <h5 class="card-header">周热词排行</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
-                <tbody>
+                <tbody  v-if="!loading_hot_words">
                 <tr v-for="(item, index) in hot_words_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -218,6 +225,13 @@
                   </td>
                 </tr>
                 </tbody>
+                <tbody v-else>
+                <tr class="spinner-grow text-info" role="status">
+                </tr>
+                <tr>
+                  加载中...
+                </tr>
+                </tbody>
               </table>
             </div>
           </div>
@@ -228,7 +242,7 @@
           <h5 class="card-header">新品速递</h5>
           <div class="card-body" style="height: 100%">
             <el-space style="width: 100%" fill>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading" animated :count="4">
+              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
                 <template #template>
                   <div style="flex: 1">
                     <el-skeleton-item variant="image" style="height: 240px"/>
@@ -243,7 +257,37 @@
                   </div>
                 </template>
                 <template #default>
-                  <el-card v-for="(item,index) in new_article_list" :key="index" :body-style="{ padding: '10px'}"
+                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index" :body-style="{ padding: '10px'}"
+                           class="card-hover cus-card">
+                    <a :href="item.url" style="text-decoration: none;color: black">
+                      <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
+                      <div style="padding: 14px">
+                        <div style="margin-bottom: 10px">{{ item.title }}</div>
+                        <div class="bottom card-header" style="margin-top: 5px">
+                          {{ item.type === 0 ? "论文" : "专利" }}
+                        </div>
+                      </div>
+                    </a>
+
+                  </el-card>
+                </template>
+              </el-skeleton>
+              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+                <template #template>
+                  <div style="flex: 1">
+                    <el-skeleton-item variant="image" style="height: 240px"/>
+                    <div style="padding: 14px">
+                      <el-skeleton-item variant="h3" style="width: 50%"/>
+                      <div
+                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
+                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
+                        <el-skeleton-item variant="text" style="width: 30%"/>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template #default>
+                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index" :body-style="{ padding: '10px'}"
                            class="card-hover cus-card">
                     <a :href="item.url" style="text-decoration: none;color: black">
                       <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
@@ -312,7 +356,7 @@
 
 <script>
 import {ElMessage} from "element-plus";
-import Nav_bar from "@/component/header.vue";
+import Nav_bar from "@/Component/header.vue";
 
 
 export default {
@@ -323,7 +367,9 @@ export default {
       logo_img: 'images/logo.png',
       dialogVisible: false,
       nav_img_head: '软分知网',
-      loading: true,
+      loading_hot_articles: true,
+      loading_hot_words: true,
+      loading_new_articles: true,
       current_date: new Date().toDateString(),
       user_data: {
         login: true,
@@ -335,37 +381,9 @@ export default {
         type: 0,
         types: [
           {value: "主题"},
+          {value: "来源"},
           {value: "作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
-          {value: "作者作者作者"},
+          {value: "研究领域"},
         ],
         place_holder: "请输入查询",
         content: "",
@@ -396,96 +414,9 @@ export default {
           link: "#"
         },
       ],
-      download_list: [
-        {
-          index: 1,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 2,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 3,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 4,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 5,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 6,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 7,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 8,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 9,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-        {
-          index: 10,
-          title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-          link: "#",
-          belong: "《心理科学进展》",
-          time: "2024-10-10"
-        },
-      ],
-      hot_words_list: [
-        {index: 1, name: "新质生产力", hot_value: "12345", type: 0},
-        {index: 2, name: "新质生产力", hot_value: "12345", type: 1},
-        {index: 3, name: "新质生产力", hot_value: "12345", type: 2},
-        {index: 4, name: "新质生产力", hot_value: "12345", type: 2},
-        {index: 5, name: "新质生产力", hot_value: "12345", type: 0},
-        {index: 6, name: "新质生产力", hot_value: "12345", type: 1},
-        {index: 7, name: "新质生产力", hot_value: "12345", type: 0},
-        {index: 8, name: "新质生产力", hot_value: "12345", type: 1},
-        {index: 9, name: "新质生产力", hot_value: "12345", type: 2},
-        {index: 10, name: "新质生产力", hot_value: "12345", type: 0},
-      ],
-      new_article_list: [
-        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-        {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-      ],
+      download_list: [],
+      hot_words_list: [],
+      new_article_list: [],
       test: true,
       log_message: "什么都没有哦~",
     }
@@ -505,6 +436,7 @@ export default {
         this.search_setting.history = this.search_setting.history.slice(0, 20);
       }
       this.save_history();
+      this.$router.push({name:"search", query: {field: this.search_setting.types[this.search_setting.type].value, question: this.search_setting.content}});
     },
     search_word(content) {
       this.search_setting.history = this.search_setting.history.filter((item) => item.value !== content);
@@ -513,6 +445,8 @@ export default {
         this.search_setting.history = this.search_setting.history.slice(0, 20);
       }
       this.save_history();
+      this.$router.push({name:"search", query: {field: "主题", question: content}});
+
     },
     get_history(queryString, cb) {
       let items = this.search_setting.history;
@@ -595,16 +529,129 @@ export default {
           break;
       }
       this.dialogVisible = true;
+    }, load_hot_words() {
+      setTimeout(() => {
+        this.hot_words_list = [{index: 1, name: "新质生产力", hot_value: "82", type: 0},
+          {index: 2, name: "数字化转型", hot_value: "67", type: 1},
+          {index: 3, name: "人工智能", hot_value: "30", type: 2},
+          {index: 4, name: "数字经济", hot_value: "12", type: 2},
+          {index: 5, name: "盈利能力分析", hot_value: "10", type: 0},
+          {index: 6, name: "绿色金融", hot_value: "9", type: 1},
+          {index: 7, name: "绿色债券", hot_value: "7", type: 0},
+          {index: 8, name: "财务风险", hot_value: "3", type: 1},
+          {index: 9, name: "财务舞弊", hot_value: "3", type: 2},
+          {index: 10, name: "中国式现代化", hot_value: "2", type: 0}
+        ]
+        this.loading_hot_words = false;
+      }, 500)
     },
+    load_hot_articles() {
+      setTimeout(() => {
+        this.download_list = [
+          {
+            index: 1,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 2,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 3,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 4,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 5,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 6,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 7,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 8,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 9,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+          {
+            index: 10,
+            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
+            link: "#",
+            belong: "《心理科学进展》",
+            time: "2024-10-10"
+          },
+        ]
+        this.loading_new_articles = false;
+      }, 2500)
+    },
+    load_new_articles() {
+      setTimeout(() => {
+        this.new_article_list = [
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
+          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
+        ];
+        this.loading_hot_articles = false;
+      }, 3000)
+    },
+    init() {
+      this.loading_hot_words = true;
+      this.loading_hot_articles = true;
+      this.loading_new_articles = true;
+    },
+
 
   },
   created() {
+    this.init();
     this.load_history();
     this.load_choices();
-    setTimeout(() => {
-      this.loading = false;
-    }, 2000)
-
+    this.load_hot_words();
+    this.load_new_articles();
+    this.load_hot_articles();
   },
   computed: {
     choice_num() {

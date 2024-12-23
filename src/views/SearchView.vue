@@ -15,8 +15,8 @@
 </template>
 
 <script lang="ts" setup>
-import HeaderNav from "@/component/HeaderNav.vue";
-import SearchResult from "@/component/SearchResult.vue";
+import HeaderNav from "@/Component/HeaderNav.vue";
+import SearchResult from "@/Component/SearchResult.vue";
 import {ref, watch,defineProps} from 'vue';
 import {searchArticlesByFieldWithPage} from "@/api/Search/search";
 const sharedData = ref<{ search: string,field:string}>({search: '',field:''});
@@ -28,9 +28,9 @@ interface Props {
   question: string;
 }
 const props = defineProps<Props>()
+console.log(props)
 const field = props.field===undefined?"主题":props.field
 const question = props.question===undefined?'':props.question
-console.log(field,question)
 // field = "来源";
 // question = "1234";
 // 定义响应式变量
