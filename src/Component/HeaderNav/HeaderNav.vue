@@ -114,10 +114,23 @@ const selectTheme = (value: string) => {
 };
 interface Props {
     page: number
+    field: string;
+    question: string;
 }
 
 const props = defineProps<Props>();
-
+// eslint-disable-next-line vue/no-setup-props-destructure
+currentField.value = props.field
+const searchParams = ref({
+    search: ''
+    , field:'articleName'
+    ,page:props.page
+    ,pageSize:20
+})
+// eslint-disable-next-line vue/no-setup-props-destructure
+searchParams.value.field = props.field
+// eslint-disable-next-line vue/no-setup-props-destructure
+searchParams.value.search=props.question
 const emit = defineEmits<{
     (event: 'sendData', payload: { search: string ,field: string}): void;
     (event: 'requestSearch', payload: {field: string,page: number,pageSize: number }): void;
@@ -157,12 +170,6 @@ let submenu = [
 
 let currentLang = ref<number>(0)
 let currentId = ref<number>(0)
-const searchParams = ref({
-    search: ''
-    , field:'articleName'
-    ,page:props.page
-    ,pageSize:20
-})
 const handleMenu = (item: MenuItem) => {
     currentId.value = item.id
 }
