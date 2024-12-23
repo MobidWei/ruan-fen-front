@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'Index'
+  name: 'Index-1'
 }
 </script>
 <style scoped></style>
