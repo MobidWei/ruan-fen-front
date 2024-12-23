@@ -1,6 +1,6 @@
 <template>
   <header-vue></header-vue>
-<div class="downBox">
+  <div class="downBox">
     <div class="claim">
       <div class="header">
         <div>注册</div>
@@ -16,10 +16,21 @@
           inline
         >
           <el-form-item label="用户名：" size="large">
-            <el-input v-model="ruleForm.userName" input-style="width: 350px"/>
+            <el-input v-model="ruleForm.userName" input-style="width: 350px" />
           </el-form-item>
           <el-form-item label="密码：" size="large" inline="true" prop="email">
             <el-input v-model="ruleForm.password" input-style="width: 350px" />
+          </el-form-item>
+          <el-form-item
+            label="确认密码："
+            size="large"
+            inline="true"
+            prop="email"
+          >
+            <el-input
+              v-model="ruleForm.confirmPassword"
+              input-style="width: 350px"
+            />
           </el-form-item>
         </el-form>
         <div style="width: 100%; margin: 30px 0; text-align: center">
@@ -39,7 +50,7 @@
 
 <script lang='ts'>
 import headerVue from "@/component/header.vue";
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from "vue";
 import type { ComponentSize, FormInstance, FormRules } from "element-plus";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { request } from "../utils/http/request";
@@ -50,24 +61,43 @@ export default {
   },
   name: "registerView",
   setup() {
-
     const ruleFormRef = ref<FormInstance>();
     interface RuleForm {
       userName: string;
       password: string;
+      confirmPassword: string;
     }
 
     const ruleForm = reactive<RuleForm>({
       userName: "",
       password: "",
+      confirmPassword: "",
     });
 
+    const validateCaptcha = (rule: any, value: any, callback: any) => {
+      if (value === "") {
+        callback(new Error("请输入验证码!"));
+      } else {
+        if (ruleForm.confirmPassword !== "") {
+          if (!ruleFormRef.value) return;
+          if (value !== ruleForm.confirmPassword) callback(new Error("验证码错误!"));
+        }
+        callback();
+      }
+    };
     const rules = reactive<FormRules<RuleForm>>({
       userName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
       password: [
         {
           required: true,
           message: "请输入密码",
+          trigger: "blur",
+        },
+      ],
+      confirmPassword: [
+        {
+          required: true,
+          message: "请再次输入密码",
           trigger: "blur",
         },
       ],
@@ -79,9 +109,9 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       })
-      .then(() => {
-        sendConfirm();
-      })
+        .then(() => {
+          sendConfirm();
+        })
         .then(() => {
           ElMessage({
             type: "success",

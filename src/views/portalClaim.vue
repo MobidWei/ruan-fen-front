@@ -112,7 +112,6 @@ export default {
       for (let i = 0; i < 6; i++) {
         realCaptcha.value += Math.floor(Math.random() * 10);
       }
-      realCaptcha.value = "123456";
     };
     const validateCaptcha = (rule: any, value: any, callback: any) => {
       if (value === "") {
@@ -134,11 +133,18 @@ export default {
 
     const rules = reactive<FormRules<RuleForm>>({
       realName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-      email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
+      email: [
+        {
+          required: true,
+          validator: validateEmail,
+          message: "请输入邮箱",
+          trigger: "blur",
+        },
+      ],
       captcha: [
         {
           required: true,
-          // validator: validateCaptcha,
+          validator: validateCaptcha,
           message: "",
           trigger: "blur",
         },
@@ -153,7 +159,8 @@ export default {
       })
         .then(() => {
           sendConfirm();
-        }).then(() => {
+        })
+        .then(() => {
           ElMessage({
             type: "success",
             message: "提交成功！",
@@ -169,15 +176,14 @@ export default {
     const sendConfirm = () => {
       console.log(123);
       request({
-        url: "/search/article/allArticle",
-        method: "get",
-        // params: {
-        //   email: ruleForm.email,
-        //   code: realCaptcha,
-        // },
+        url: "/user/sendEmail",
+        method: "post",
+        params: {
+          email: ruleForm.email,
+          code: realCaptcha,
+        },
       })
         .then((response) => {
-          console.log(12333);
           console.log(response.data);
         })
         .catch((error) => {

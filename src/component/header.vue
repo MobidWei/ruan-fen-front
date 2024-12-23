@@ -37,7 +37,7 @@
             </router-link>
           </div>
           <div class="login" v-if="store.state.hasLogin == true">
-            <button class="login-button">
+            <button class="login-button" @click="quit">
               退出登录
             </button>
           </div>
@@ -50,13 +50,37 @@
 <script lang="ts">
 import { useStore } from 'vuex'
 import { ref } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
 const hovered = ref(false);
 export default {
   name: "headerView",
   setup(){
     const store = useStore();
+    const quit = () => {
+      ElMessageBox.confirm("确认退出登录？", "确认信息", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          store.dispatch("commitSetToken", "");
+          store.dispatch("commitSetUserName", "");
+          store.dispatch("commitLogin", false);
+          ElMessage({
+            type: "success",
+            message: "退出成功！",
+          });
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "出了点小问题。",
+          });
+        });
+    }
     return {
       store,
+      quit,
     }
   }
 };
