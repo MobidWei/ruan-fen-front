@@ -101,7 +101,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import header from "../component/header.vue";
+import header from "@/Component/header.vue";
 
 export default defineComponent({
   components: { "header-view": header },
