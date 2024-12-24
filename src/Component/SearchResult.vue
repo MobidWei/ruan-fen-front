@@ -31,21 +31,18 @@
 <!--                    </div>-->
                 </div>
                 <div class="filter__se__rf  flex align-center">
-                    <span>排序：<span class="pointer" :class="{'active':searchParams.relevant !== ''}"
-                                     @click="handleFilter('relevant')">相关度<el-icon v-if="searchParams.relevant ===1"><Bottom/></el-icon><el-icon
-                            v-if="searchParams.relevant ===2"><Top/></el-icon></span></span>
+                    <span>排序：<span class="pointer" :class="{'active':searchParams.articleId !== ''}"
+                                     @click="handleFilter('articleId')">相关度<el-icon v-if="searchParams.articleId ===1"><Bottom/></el-icon><el-icon
+                            v-if="searchParams.articleId ===2"><Top/></el-icon></span></span>
                     <span class="m-l-20 pointer" :class="{'active':searchParams.publishTime !== ''}"
                           @click="handleFilter('publishTime')">发表时间<el-icon v-if="searchParams.publishTime ===1"><Bottom/></el-icon><el-icon
                             v-if="searchParams.publishTime ===2"><Top/></el-icon></span>
-                    <span class="m-l-20 pointer" :class="{'active':searchParams.reference !== ''}"
-                          @click="handleFilter('reference')">被引<el-icon v-if="searchParams.reference ===1"><Bottom/></el-icon><el-icon
-                            v-if="searchParams.reference ===2"><Top/></el-icon></span>
-                    <span class="m-l-20 pointer" :class="{'active':searchParams.look !== ''}"
-                          @click="handleFilter('look')">浏览<el-icon v-if="searchParams.look ===1"><Bottom/></el-icon><el-icon
-                            v-if="searchParams.look ===2"><Top/></el-icon></span>
-                    <span class="m-l-20 pointer" :class="{'active':searchParams.type !== ''}"
-                          @click="handleFilter('type')">综合<el-icon v-if="searchParams.type ===1"><Bottom/></el-icon><el-icon
-                            v-if="searchParams.type ===2"><Top/></el-icon></span>
+                    <span class="m-l-20 pointer" :class="{'active':searchParams.views !== ''}"
+                          @click="handleFilter('views')">浏览<el-icon v-if="searchParams.views ===1"><Bottom/></el-icon><el-icon
+                            v-if="searchParams.views ===2"><Top/></el-icon></span>
+<!--                    <span class="m-l-20 pointer" :class="{'active':searchParams.type !== ''}"-->
+<!--                          @click="handleFilter('type')">综合<el-icon v-if="searchParams.type ===1"><Bottom/></el-icon><el-icon-->
+<!--                            v-if="searchParams.type ===2"><Top/></el-icon></span>-->
                     <span class="m-l-20 btn-sel pointer"><el-icon><FullScreen/></el-icon></span>
                     <span class="m-l-10 btn-sel pointer"><el-icon><List/></el-icon></span>
                 </div>
@@ -109,11 +106,9 @@ interface Book {
 
 interface Params {
     pageSize: number,
-    relevant: number | string,
+    articleId: number | string,
     publishTime: number | string,
-    reference: number | string,
-    look: number | string,
-    type: number | string,
+    views: number | string,
 }
 
 let pages = [
@@ -123,11 +118,9 @@ let multipleTableRef = ref<any>()
 let checkAll = ref<boolean>(false)
 let searchParams = ref<Params>({
     pageSize: 20,
-    relevant: '',
+    articleId: '',
     publishTime: '',
-    reference: '',
-    look: '',
-    type: '',
+    views: '',
 })
 // const selectable = (row: Book) => !!multipleSelection.value.map((item:Book) => item.id).includes(row.id)
 const multipleSelection = ref<Book[]>([])
@@ -317,11 +310,8 @@ const handleFilter = (tag: keyof Params) => {
     // 清空其他字段，只保留当前字段的值
     Object.assign(searchParams.value, {
         publishTime: '',
-        reference: '',
-        download: '',
-        type: '',
-        look: '',
-        relevant: '',
+        articleId: '',
+        views: '',
         [tag]: searchParams.value[tag] === "" ? 1 : searchParams.value[tag] === 1 ? 2 : 1 // 切换排序方向
     });
 

@@ -75,7 +75,7 @@ export function searchArticlesByFieldWithPage(
   pageSize: number
 ) {
   return request<CommonResponse<any>>({
-    url: `/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
+    url: `/search/article/page/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
     method: "get",
   });
 }
@@ -88,7 +88,7 @@ export function searchSortedArticlesByFieldWithPage(
   desc: number,
 ) {
   return request<CommonResponse<any>>({
-    url: `/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField="${orderFiled}"&desc=${desc}`,
+    url: `/search/article/page/order/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField=${orderFiled}&desc=${desc}`,
     method: "get",
   });
 }
