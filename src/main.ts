@@ -12,7 +12,16 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'
 
 const app = createApp(App);
+const resizeObserverErrHandler = () => {
+    console.warn('ResizeObserver loop completed with undelivered notifications.');
+};
 
+window.addEventListener('error', (e) => {
+    if (e.message === 'ResizeObserver loop completed with undelivered notifications.') {
+        e.stopImmediatePropagation();
+        resizeObserverErrHandler();
+    }
+});
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
 }

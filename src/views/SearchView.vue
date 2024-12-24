@@ -2,7 +2,7 @@
     <div class="wrap">
         <HeaderNav :page="currentPage" :field="field" :question="question" @sendData="handleData"
                    @requestSearch="handleSearchRequest"/>
-        <SearchResult :question="sharedData" :page="currentPage" :articles="articleList"/>
+        <SearchResult :question="sharedData" :page="currentPage" :articles="articleList" @update-sort="updateSort"/>
         <div class="pagination-container">
             <el-pagination
                     v-model:current-page="currentPage"
@@ -19,7 +19,7 @@
 import HeaderNav from "@/Component/HeaderNav.vue";
 import SearchResult from "@/Component/SearchResult.vue";
 import {ref, watch, defineProps} from 'vue';
-import {searchArticlesByFieldWithPage} from "@/api/Search/search";
+import {searchArticlesByFieldWithPage, searchSortedArticlesByFieldWithPage} from "@/api/Search/search";
 import * as stream from "stream";
 
 const sharedData = ref<{ search: string, field: string }>({search: '', field: ''});
@@ -43,10 +43,10 @@ const currentPage = ref<number>(1);
 const totalItems = ref<number>(1000); // 总条目数
 const lastSearchParams = ref({field: '', search: '', page: 1, pageSize: 20});
 // 监听 currentPage 的变化
-watch(currentPage, (newPage) => {
-    console.log('当前页码:', newPage);
+watch(currentPage, async (newPage) => {
     // 在这里可以调用您的搜索函数或数据获取函数
     // fetchData(newPage);
+    currentPage.value = newPage;
 });
 
 // 处理页码变化的函数（可选）
@@ -57,6 +57,7 @@ const handlePageChange = async (page: number) => {
     await handleSearchRequest({
         ...lastSearchParams.value
     });
+    console.log('变化',lastSearchParams.value);
 };
 const articleList = ref<any[]>([]);
 // 当 SiblingA 发起搜索请求，带有要搜索的 field, text, page, pageSize
@@ -65,6 +66,7 @@ const handleSearchRequest = async (
 ) => {
     try {
         lastSearchParams.value = {...payload};
+        lastSearchParams.value.page=currentPage.value;
         const response = await searchArticlesByFieldWithPage(
             payload.field,
             payload.search,
@@ -82,6 +84,25 @@ const handleSearchRequest = async (
     } catch (err) {
         console.error('搜索错误:', err);
         articleList.value = [];
+    }
+};
+const updateSort = async ({ orderField, desc }: { orderField: string; desc: number }) => {
+    try {
+        const response = await searchSortedArticlesByFieldWithPage(
+            lastSearchParams.value.field,
+            lastSearchParams.value.search,
+            currentPage.value,
+            lastSearchParams.value.pageSize,
+            orderField,
+            desc
+        );
+        if (response.code === 200) {
+            articleList.value = response.data; // 更新文章数据
+        } else {
+            console.error('排序请求失败:', response.message);
+        }
+    } catch (error) {
+        console.error('请求错误:', error);
     }
 };
 </script>

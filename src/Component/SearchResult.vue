@@ -10,8 +10,8 @@
 <!--                        <TopicComponent :topic="question.search" />-->
 <!--                    </div>-->
 <!--                    <span>{{question.field}}</span>-->
-                    <span class="btn-topic pointer">主题定制</span>
-                    <span class="btn-topic pointer">检索历史</span>
+<!--                    <span class="btn-topic pointer">主题定制</span>-->
+<!--                    <span class="btn-topic pointer">检索历史</span>-->
                 </div>
                 <div class="table__search__fr flex align-center">
                     <div class="result">总共找到<span>147,219</span>条结果</div>
@@ -46,20 +46,6 @@
                     <span class="m-l-20 pointer" :class="{'active':searchParams.type !== ''}"
                           @click="handleFilter('type')">综合<el-icon v-if="searchParams.type ===1"><Bottom/></el-icon><el-icon
                             v-if="searchParams.type ===2"><Top/></el-icon></span>
-                    <div class="flex align-center m-l-20">
-                        <span class="flex-shrink">显示：</span>
-                        <el-select
-                                v-model="searchParams.pageSize"
-                                style="width: 60px"
-                        >
-                            <el-option
-                                    v-for="item in pages"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value"
-                            />
-                        </el-select>
-                    </div>
                     <span class="m-l-20 btn-sel pointer"><el-icon><FullScreen/></el-icon></span>
                     <span class="m-l-10 btn-sel pointer"><el-icon><List/></el-icon></span>
                 </div>
@@ -82,13 +68,21 @@
                         </template>
                     </el-table-column>
 
-                    <el-table-column label="题名">
-                        <template #default="scope">{{ scope.row.name }}</template>
+                    <el-table-column label="题名" width="900" :show-overflow-tooltip="true">
+                        <template #default="scope">{{ scope.row.articleName }}</template>
                     </el-table-column>
-                    <el-table-column prop="author" label="作者" width="160"/>
-                    <el-table-column prop="source" label="来源" width="160"/>
-                    <el-table-column prop="date" label="发表时间" width="160"/>
-                    <el-table-column prop="database" label="数据库" width="120"/>
+                    <el-table-column label="作者" width="200" :show-overflow-tooltip="true">
+                        <template #default="scope">{{ scope.row.researcherName }}</template>
+                    </el-table-column>
+                    <el-table-column label="领域" width="160" :show-overflow-tooltip="true">
+                        <template #default="scope">{{ scope.row.fieldOfResearch }}</template>
+                    </el-table-column>
+                    <el-table-column label="发表时间" width="160" :show-overflow-tooltip="true">
+                        <template #default="scope">{{ formattedDate(scope.row.publishTime) }}</template>
+                    </el-table-column>
+                    <el-table-column label="数据库" width="120" :show-overflow-tooltip="true">
+                        专利库
+                    </el-table-column>
                 </el-table>
             </div>
         </div>
@@ -96,7 +90,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, watch,defineProps} from 'vue'
+import {ref, watch,defineProps,defineEmits} from 'vue'
 interface Props {
     page: number
     question: {search:string ,field:string}
@@ -310,60 +304,36 @@ const changeCheckAll = (e: boolean) => {
     }
 
 }
+const formattedDate = ((inputDate: string) => {
+      const date = new Date(inputDate);
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    })
 const clearHandle = () => {
     multipleSelection.value = []
     multipleTableRef.value.clearSelection()
 }
+const emit = defineEmits(['update-sort']);
 const handleFilter = (tag: keyof Params) => {
-    if (tag === 'publishTime') {
-        // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
-        Object.assign(searchParams.value, {
-            reference: '',
-            download: '',
-            type: '',
-            relevant: ''
-        })
-    }
-    if (tag === 'reference') {
-        // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
-        Object.assign(searchParams.value, {
-            publishTime: '',
-            download: '',
-            type: '',
-            relevant: ''
-        })
+    // 清空其他字段，只保留当前字段的值
+    Object.assign(searchParams.value, {
+        publishTime: '',
+        reference: '',
+        download: '',
+        type: '',
+        look: '',
+        relevant: '',
+        [tag]: searchParams.value[tag] === "" ? 1 : searchParams.value[tag] === 1 ? 2 : 1 // 切换排序方向
+    });
 
-    }
-    if (tag === 'look') {
-        // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
-        Object.assign(searchParams.value, {
-            publishTime: '',
-            reference: '',
-            type: '',
-            relevant: ''
-        })
+    // 排序方向：1 表示降序 (desc = 1)，2 表示升序 (desc = 0)
+    const desc = searchParams.value[tag] === 1 ? 1 : 0;
 
-    }
-    if (tag === 'type') {
-        // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
-        Object.assign(searchParams.value, {
-            publishTime: '',
-            reference: '',
-            download: '',
-            relevant: ''
-        })
-
-    }
-    if (tag === 'relevant') {
-        Object.assign(searchParams.value, {
-            publishTime: '',
-            reference: '',
-            download: '',
-            type: ''
-        })
-    }
-    searchParams.value[tag] = searchParams.value[tag] === "" ? 1 : searchParams.value[tag] === 1 ? 2 : 1
-}
+    // 触发父组件方法，传递排序字段和方向
+    emit('update-sort', {
+        orderField: tag,
+        desc,
+    });
+};
 </script>
 <style lang="scss" scoped>
 .table {

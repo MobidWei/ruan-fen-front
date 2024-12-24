@@ -75,11 +75,23 @@ export function searchArticlesByFieldWithPage(
   pageSize: number
 ) {
   return request<CommonResponse<any>>({
-    url: `https://localhost:8080/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
+    url: `/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
     method: "get",
   });
 }
-
+export function searchSortedArticlesByFieldWithPage(
+  field: string,
+  text: string,
+  page: number,
+  pageSize: number,
+  orderFiled: string,
+  desc: number,
+) {
+  return request<CommonResponse<any>>({
+    url: `/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField="${orderFiled}"&desc=${desc}`,
+    method: "get",
+  });
+}
 /**
  * 根据文章ID获取指定文章
  * GET /search/article/doc/{articleId}
