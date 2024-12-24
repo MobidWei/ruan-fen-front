@@ -14,7 +14,7 @@
 <!--                    <span class="btn-topic pointer">检索历史</span>-->
                 </div>
                 <div class="table__search__fr flex align-center">
-                    <div class="result">总共找到<span>147,219</span>条结果</div>
+                    <div class="result">总共找到<span>{{props.count}}</span>条结果</div>
                     <div class="page flex align-center justfiy-center">
                         <span class="btn-next flex align-center justify-center  pointer"><el-icon><CaretRight/></el-icon></span>
                     </div>
@@ -92,6 +92,7 @@ interface Props {
     page: number
     question: {search:string ,field:string}
     articles: any[];
+    count: number
 }
 
 const props = defineProps<Props>();

@@ -2,7 +2,7 @@
     <div class="wrap">
         <HeaderNav :page="currentPage" :field="field" :question="question" @sendData="handleData"
                    @requestSearch="handleSearchRequest"/>
-        <SearchResult :question="sharedData" :page="currentPage" :articles="articleList" @update-sort="updateSort"/>
+        <SearchResult :question="sharedData" :page="currentPage" :articles="articleList" :count="count" @update-sort="updateSort"/>
         <div class="pagination-container">
             <el-pagination
                     v-model:current-page="currentPage"
@@ -60,6 +60,7 @@ const handlePageChange = async (page: number) => {
     console.log('变化',lastSearchParams.value);
 };
 const articleList = ref<any[]>([]);
+const count = ref<number>(0);
 // 当 SiblingA 发起搜索请求，带有要搜索的 field, text, page, pageSize
 const handleSearchRequest = async (
     payload: { field: string; search: string; page: number; pageSize: number }
@@ -76,14 +77,20 @@ const handleSearchRequest = async (
         console.log(response);
         if (response.code === 200) {
             // 返回值中 response.data = List<ArticleDoc>
-            articleList.value = response.data;
+            articleList.value = response.data.articleDocs || [];
+            count.value = response.data.count||0;
+            totalItems.value = response.data.count/20+1 || 1;
         } else {
             console.error('搜索失败:', response.message);
             articleList.value = [];
+            totalItems.value=1;
+            count.value =0;
         }
     } catch (err) {
         console.error('搜索错误:', err);
         articleList.value = [];
+        totalItems.value=1;
+        count.value =0;
     }
 };
 const updateSort = async ({ orderField, desc }: { orderField: string; desc: number }) => {
@@ -97,7 +104,9 @@ const updateSort = async ({ orderField, desc }: { orderField: string; desc: numb
             desc
         );
         if (response.code === 200) {
-            articleList.value = response.data; // 更新文章数据
+            articleList.value = response.data.articleDocs || [];
+            totalItems.value = response.data.count/20+1 || 1;
+            count.value = response.data.count || 0;
         } else {
             console.error('排序请求失败:', response.message);
         }
