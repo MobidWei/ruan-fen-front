@@ -12,14 +12,30 @@ interface SearchResponse {
     // 其他可能的字段
 }
 
-export function searchArticlesByFieldWithPage(
-    field: string,
-    text: string,
-    page: number,
-    pageSize: number
-) {
+export function searchArticlesByTimeDesc() {
+    const body = {
+        "orFieldsAndTexts": [],
+        "andFieldsAndTexts": [],
+        "orderField": "publishTime",
+        "desc": 1
+    }
     return request<CommonResponse<any>>({
-        url: `https://localhost:8080/search/article/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
-        method: "get",
+        url: `/search/article/cond`,
+        method: "post",
+        data: body
+    });
+}
+
+export function searchArticlesByViewDesc() {
+    const body = {
+        "orFieldsAndTexts": [],
+        "andFieldsAndTexts": [],
+        "orderField": "articleId",
+        "desc": 0
+    }
+    return request<CommonResponse<any>>({
+        url: `/search/article/cond`,
+        method: "post",
+        data: body
     });
 }

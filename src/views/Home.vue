@@ -15,9 +15,10 @@
     <div class="container text-center">
       <div class="row">
         <div class="col-md-1 "></div>
-        <div class="col-md-10 " >
+        <div class="col-md-10 ">
           <div class="container">
-            <div class="row" style="border: 1px solid rgba(128, 128, 128, 0.4); border-radius: 10px; margin-bottom: 40px; padding-bottom: 30px; padding-left: 10px; padding-right: 20px;">
+            <div class="row"
+                 style="border: 1px solid rgba(128, 128, 128, 0.4); border-radius: 10px; margin-bottom: 40px; padding-bottom: 30px; padding-left: 10px; padding-right: 20px;">
               <div class="col-1" style="padding: 5px 0">
                 <button class="btn btn-outline-light" type="button" style="width: 100%; min-height: 80px; color: black;"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -38,13 +39,14 @@
                   </li>
                 </ul>
               </div>
-              <div class="col-11" style="padding: 5px" >
+              <div class="col-11" style="padding: 5px">
                 <div class="container">
                   <div class="row">
                     <button type="button" class="btn header-card"
                             :class="search_setting.mode===0?'btn-outline-dark':'btn-light'" @click="change_mode(0)">普通检索
                     </button>
-                    <router-link to='AdvancedSearch' style="width: fit-content; line-height: 40px;">点击前往高级检索</router-link>
+                    <router-link to='AdvancedSearch' style="width: fit-content; line-height: 40px;">点击前往高级检索
+                    </router-link>
                   </div>
                 </div>
                 <div class="input-group input-group-md">
@@ -111,7 +113,7 @@
 
         <div class="col-8 " style="padding-left: 0;">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
-            <h5 class="card-header">周下载排行</h5>
+            <h5 class="card-header">最新文章</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
                 <tbody v-if="!loading_hot_articles">
@@ -148,6 +150,14 @@
                   <td>{{ item.time }}</td>
                 </tr>
                 </tbody>
+                <tbody v-else-if="load_hot_article_error">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+                </svg>
+                <tr>
+                  加载失败...
+                </tr>
+                </tbody>
                 <tbody v-else>
                 <tr class="spinner-grow text-info" role="status">
                 </tr>
@@ -164,7 +174,7 @@
             <h5 class="card-header">周热词排行</h5>
             <div class="card-body" style="height: 100%">
               <table class="table">
-                <tbody  v-if="!loading_hot_words">
+                <tbody v-if="!loading_hot_words">
                 <tr v-for="(item, index) in hot_words_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -239,7 +249,7 @@
       </div>
       <div class="row" style="margin-top: 20px">
         <div class="card" style="background-color: #f6f9feaf;height: 100%">
-          <h5 class="card-header">新品速递</h5>
+          <h5 class="card-header">热文速递</h5>
           <div class="card-body" style="height: 100%">
             <el-space style="width: 100%" fill>
               <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
@@ -257,7 +267,8 @@
                   </div>
                 </template>
                 <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index" :body-style="{ padding: '10px'}"
+                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index"
+                           :body-style="{ padding: '10px'}"
                            class="card-hover cus-card">
                     <a :href="item.url" style="text-decoration: none;color: black">
                       <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
@@ -287,7 +298,8 @@
                   </div>
                 </template>
                 <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index" :body-style="{ padding: '10px'}"
+                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index"
+                           :body-style="{ padding: '10px'}"
                            class="card-hover cus-card">
                     <a :href="item.url" style="text-decoration: none;color: black">
                       <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
@@ -313,8 +325,7 @@
       <div class="card-body">
         <div class="container">
           <p class="card-text" style="text-align: left;font-size:25px;">
-            <img :src="logo_img" alt="" width="50" height="50"/>
-            {{ nav_img_head }}
+            <img src="../assets/logo-无背景.png" alt="" width="150" height="50"/>
           </p>
           <div class="row" style="margin-top: 40px;margin-bottom: 40px">
             <div class="col-4" style="border-right: 1px solid #f6f9feaf">
@@ -357,6 +368,7 @@
 <script>
 import {ElMessage} from "element-plus";
 import Nav_bar from "@/Component/header.vue";
+import {searchArticlesByTimeDesc, searchArticlesByViewDesc} from "@/api/home/home";
 
 
 export default {
@@ -364,10 +376,10 @@ export default {
   components: {Nav_bar},
   data() {
     return {
-      logo_img: 'images/logo.png',
       dialogVisible: false,
       nav_img_head: '软分知网',
       loading_hot_articles: true,
+      load_hot_article_error: false,
       loading_hot_words: true,
       loading_new_articles: true,
       current_date: new Date().toDateString(),
@@ -433,7 +445,10 @@ export default {
         this.search_setting.history = this.search_setting.history.slice(0, 20);
       }
       this.save_history();
-      this.$router.push({name:"search", query: {field: this.search_setting.types[this.search_setting.type].value, question: this.search_setting.content}});
+      this.$router.push({
+        name: "search",
+        query: {field: this.search_setting.types[this.search_setting.type].value, question: this.search_setting.content}
+      });
     },
     search_word(content) {
       this.search_setting.history = this.search_setting.history.filter((item) => item.value !== content);
@@ -442,7 +457,7 @@ export default {
         this.search_setting.history = this.search_setting.history.slice(0, 20);
       }
       this.save_history();
-      this.$router.push({name:"search", query: {field: "主题", question: content}});
+      this.$router.push({name: "search", query: {field: "主题", question: content}});
 
     },
     get_history(queryString, cb) {
@@ -502,11 +517,11 @@ export default {
         }
       }
     },
-    alert(messages, type) {
+    alert(messages, type, duration=3000) {
       ElMessage({
         message: messages,
         type: type,
-        duration: 3000,
+        duration: duration,
         showClose: true
       })
     },
@@ -526,8 +541,8 @@ export default {
           break;
       }
       this.dialogVisible = true;
-    }, load_hot_words() {
-      setTimeout(() => {
+    },
+    load_hot_words() {
         this.hot_words_list = [{index: 1, name: "新质生产力", hot_value: "82", type: 0},
           {index: 2, name: "数字化转型", hot_value: "67", type: 1},
           {index: 3, name: "人工智能", hot_value: "30", type: 2},
@@ -539,100 +554,44 @@ export default {
           {index: 9, name: "财务舞弊", hot_value: "3", type: 2},
           {index: 10, name: "中国式现代化", hot_value: "2", type: 0}
         ]
-        this.loading_hot_words = false;
-      }, 500)
     },
     load_hot_articles() {
-      setTimeout(() => {
-        this.download_list = [
-          {
-            index: 1,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 2,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 3,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 4,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 5,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 6,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 7,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 8,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 9,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-          {
-            index: 10,
-            title: "次优食品营销干预策略的有效性探究：来自元分析的证据",
-            link: "#",
-            belong: "《心理科学进展》",
-            time: "2024-10-10"
-          },
-        ]
-        this.loading_new_articles = false;
-      }, 2500)
+      searchArticlesByTimeDesc().then((request) => {
+        console.log(request.data)
+        for (let i = 0; i < 10; i++) {
+          this.new_article_list.push({
+            index: i,
+            title: request.data[i].articleName,
+            time: request.data[i].publishTime,
+            belong:request.data[i].fieldOfResearch,
+            link: `/article/${request.data[i].articleId}`,
+          })
+        }
+        this.loading_hot_articles = false;
+        this.loading_hot_words = false;
+
+      }).catch((error)=>{
+        console.log(error)
+        this.load_hot_article_error = true;
+        this.alert("加载失败，请检查您的网络","error",30000)
+      })
     },
     load_new_articles() {
-      setTimeout(() => {
-        this.new_article_list = [
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 0},
-          {title: "《黑神话：悟空》跨文化传播策略与路径研究", url: "#", cover_img_url: "images/testImage.jpg", type: 1},
-        ];
-        this.loading_hot_articles = false;
-      }, 3000)
+      searchArticlesByViewDesc().then((request) => {
+        console.log(request.data)
+        for (let i = 0; i < 8; i++) {
+          this.new_article_list.push({
+            title: request.data[i].articleName,
+            url: `/article/${request.data[i].articleId}`,
+            cover_image_url:`images/testImage${i}.jpg`,
+            type: 0,
+          })
+        }
+        this.loading_new_articles = false;
+      }).catch((error)=>{
+        console.log(error)
+        this.alert("加载失败，请检查您的网络","error",30000)
+      })
     },
     init() {
       this.loading_hot_words = true;
@@ -677,7 +636,6 @@ export default {
 }
 
 
-
 .header-card {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -693,7 +651,6 @@ export default {
   border-top-left-radius: 0 !important;
   width: 100% !important;
 }
-
 
 
 .blue-hover {
