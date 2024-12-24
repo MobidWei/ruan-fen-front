@@ -299,7 +299,7 @@ const goDetail = (row: Book) => {
 }
 const changeCheckAll = (e: boolean) => {
 
-    multipleSelection.value = e ? tableData : []
+    multipleSelection.value = e ? props.articles : []
 
     if (e) {
 
@@ -323,7 +323,6 @@ const handleFilter = (tag: keyof Params) => {
             type: '',
             relevant: ''
         })
-
     }
     if (tag === 'reference') {
         // searchParams.value[tag] = searchParams.value[tag] === 1? 2:1
