@@ -87,77 +87,85 @@
         </div>
         <div class="col-md-1 "></div>
       </div>
+    </div>
+    <div class="container text-center">
       <div class="row" style="margin-top: 20px">
-        <div class="card" style="background-color: #f6f9feaf;height: 100%">
-          <h5 class="card-header">热文速递</h5>
-          <div class="card-body" style="height: 100%">
-            <el-space style="width: 100%" fill>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
-                <template #template>
-                  <div style="flex: 1">
-                    <el-skeleton-item variant="image" style="height: 240px"/>
-                    <div style="padding: 14px">
-                      <el-skeleton-item variant="h3" style="width: 50%"/>
-                      <div
-                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
-                        <el-skeleton-item variant="text" style="width: 30%"/>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index"
-                           :body-style="{ padding: '10px'}"
-                           class="card-hover cus-card">
-                    <a :href="item.url" style="text-decoration: none;color: black">
-                      <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+        <div class="col12">
+          <div class="card" style="background-color: #f6f9feaf;height: 100%">
+            <h5 class="card-header">热文速递</h5>
+            <div class="card-body" style="height: 100%">
+              <el-space style="width: 100%" fill>
+                <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+                  <template #template>
+                    <div style="flex: 1">
+                      <el-skeleton-item variant="image" style="height: 240px"/>
                       <div style="padding: 14px">
-                        <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
-                        <div class="bottom card-header" style="margin-top: 5px">
-                          {{ item.type === 0 ? "论文" : "专利" }}
+                        <el-skeleton-item variant="h3" style="width: 50%"/>
+                        <div
+                            style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
+                          <el-skeleton-item variant="text" style="margin-right: 16px"/>
+                          <el-skeleton-item variant="text" style="width: 30%"/>
                         </div>
                       </div>
-                    </a>
-
-                  </el-card>
-                </template>
-              </el-skeleton>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
-                <template #template>
-                  <div style="flex: 1">
-                    <el-skeleton-item variant="image" style="height: 240px"/>
-                    <div style="padding: 14px">
-                      <el-skeleton-item variant="h3" style="width: 50%"/>
-                      <div
-                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
-                        <el-skeleton-item variant="text" style="width: 30%"/>
-                      </div>
                     </div>
-                  </div>
-                </template>
-                <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index"
-                           :body-style="{ padding: '10px'}"
-                           class="card-hover cus-card">
-                    <a :href="item.url" style="text-decoration: none;color: black">
-                      <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+                  </template>
+                  <template #default>
+                    <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index"
+                             :body-style="{ padding: '10px'}"
+                             class="card-hover cus-card">
+                      <a :href="item.url" style="text-decoration: none;color: black">
+                        <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+                        <div style="padding: 14px">
+                          <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
+                          <div class="bottom card-header" style="margin-top: 5px">
+                            {{ item.type === 0 ? "论文" : "专利" }}
+                          </div>
+                        </div>
+                      </a>
+
+                    </el-card>
+                  </template>
+                </el-skeleton>
+                <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+                  <template #template>
+                    <div style="flex: 1">
+                      <el-skeleton-item variant="image" style="height: 240px"/>
                       <div style="padding: 14px">
-                        <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
-                        <div class="bottom card-header" style="margin-top: 5px">
-                          {{ item.type === 0 ? "论文" : "专利" }}
+                        <el-skeleton-item variant="h3" style="width: 50%"/>
+                        <div
+                            style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
+                          <el-skeleton-item variant="text" style="margin-right: 16px"/>
+                          <el-skeleton-item variant="text" style="width: 30%"/>
                         </div>
                       </div>
-                    </a>
+                    </div>
+                  </template>
+                  <template #default>
+                    <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index"
+                             :body-style="{ padding: '10px'}"
+                             class="card-hover cus-card">
+                      <a :href="item.url" style="text-decoration: none;color: black">
+                        <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+                        <div style="padding: 14px">
+                          <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
+                          <div class="bottom card-header" style="margin-top: 5px">
+                            {{ item.type === 0 ? "论文" : "专利" }}
+                          </div>
+                        </div>
+                      </a>
 
-                  </el-card>
-                </template>
-              </el-skeleton>
-            </el-space>
+                    </el-card>
+                  </template>
+                </el-skeleton>
+              </el-space>
+            </div>
           </div>
+
         </div>
       </div>
+
+    </div>
+    <div class="container text-center">
 
       <div class="row">
         <!-- <div class="card" style="width: 100%;background-color: #ffffff;margin: 10px 0">
@@ -183,7 +191,7 @@
           </div>
         </div> -->
 
-        <div class="col-12 " style="padding-left: 0;">
+        <div class="col-12 " style="margin-top: 20px">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
             <h5 class="card-header">最新文章</h5>
             <div class="card-body" style="height: 100%">
@@ -249,7 +257,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 " style="padding-left:0;margin-top: 20px">
+        <div class="col-12 " style="margin-top: 20px">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
             <h5 class="card-header">周热词排行</h5>
             <div class="card-body" style="height: 100%">
