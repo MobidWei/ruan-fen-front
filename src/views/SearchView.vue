@@ -8,7 +8,8 @@
                     v-model:current-page="currentPage"
                     background
                     layout="prev, pager, next"
-                    :total="totalItems"
+                    :total="count"
+                    :page-size="20"
                     @current-change="handlePageChange"
             />
         </div>
@@ -79,7 +80,9 @@ const handleSearchRequest = async (
             // 返回值中 response.data = List<ArticleDoc>
             articleList.value = response.data.articleDocs || [];
             count.value = response.data.count||0;
-            totalItems.value = response.data.count/20+1 || 1;
+            totalItems.value = Math.ceil(response.data.count / 20) || 1;
+            console.log(totalItems.value);
+            console.log(count.value);
         } else {
             console.error('搜索失败:', response.message);
             articleList.value = [];
@@ -105,7 +108,7 @@ const updateSort = async ({ orderField, desc }: { orderField: string; desc: numb
         );
         if (response.code === 200) {
             articleList.value = response.data.articleDocs || [];
-            totalItems.value = response.data.count/20+1 || 1;
+            totalItems.value = Math.ceil(response.data.count / 20) || 1;
             count.value = response.data.count || 0;
         } else {
             console.error('排序请求失败:', response.message);
