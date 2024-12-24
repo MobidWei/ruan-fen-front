@@ -31,7 +31,7 @@
                   </svg>
 
                 </button>
-                <ul class="dropdown-menu" style="max-height: 400px;overflow-y: scroll">
+                <ul class="dropdown-menu" style="max-height: 400px;">
                   <li v-for="(item,index) in search_setting.types" :key="index">
                     <button class="dropdown-item" :class="index===search_setting.type?'active':''"
                             @click="change_type(index)">{{ item.value }}
@@ -87,6 +87,78 @@
         </div>
         <div class="col-md-1 "></div>
       </div>
+      <div class="row" style="margin-top: 20px">
+        <div class="card" style="background-color: #f6f9feaf;height: 100%">
+          <h5 class="card-header">热文速递</h5>
+          <div class="card-body" style="height: 100%">
+            <el-space style="width: 100%" fill>
+              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+                <template #template>
+                  <div style="flex: 1">
+                    <el-skeleton-item variant="image" style="height: 240px"/>
+                    <div style="padding: 14px">
+                      <el-skeleton-item variant="h3" style="width: 50%"/>
+                      <div
+                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
+                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
+                        <el-skeleton-item variant="text" style="width: 30%"/>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template #default>
+                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index"
+                           :body-style="{ padding: '10px'}"
+                           class="card-hover cus-card">
+                    <a :href="item.url" style="text-decoration: none;color: black">
+                      <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+                      <div style="padding: 14px">
+                        <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
+                        <div class="bottom card-header" style="margin-top: 5px">
+                          {{ item.type === 0 ? "论文" : "专利" }}
+                        </div>
+                      </div>
+                    </a>
+
+                  </el-card>
+                </template>
+              </el-skeleton>
+              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
+                <template #template>
+                  <div style="flex: 1">
+                    <el-skeleton-item variant="image" style="height: 240px"/>
+                    <div style="padding: 14px">
+                      <el-skeleton-item variant="h3" style="width: 50%"/>
+                      <div
+                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
+                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
+                        <el-skeleton-item variant="text" style="width: 30%"/>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+                <template #default>
+                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index"
+                           :body-style="{ padding: '10px'}"
+                           class="card-hover cus-card">
+                    <a :href="item.url" style="text-decoration: none;color: black">
+                      <img :src="item.cover_image_url" class="image multi-content" style="width: 252px;height: 162px" alt=""/>
+                      <div style="padding: 14px">
+                        <div style="margin-bottom: 10px;height: 150px">{{ item.title }}</div>
+                        <div class="bottom card-header" style="margin-top: 5px">
+                          {{ item.type === 0 ? "论文" : "专利" }}
+                        </div>
+                      </div>
+                    </a>
+
+                  </el-card>
+                </template>
+              </el-skeleton>
+            </el-space>
+          </div>
+        </div>
+      </div>
+
       <div class="row">
         <!-- <div class="card" style="width: 100%;background-color: #ffffff;margin: 10px 0">
           <div class="card-body">
@@ -111,11 +183,19 @@
           </div>
         </div> -->
 
-        <div class="col-8 " style="padding-left: 0;">
+        <div class="col-12 " style="padding-left: 0;">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
             <h5 class="card-header">最新文章</h5>
             <div class="card-body" style="height: 100%">
-              <table class="table">
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">标题</th>
+                  <th scope="col">领域</th>
+                  <th scope="col">发表时间</th>
+                </tr>
+                </thead>
                 <tbody v-if="!loading_hot_articles">
                 <tr v-for="(item, index) in download_list" :key="index">
                   <td><span v-if="item.index === 1" style="color: goldenrod">
@@ -143,11 +223,11 @@
                     <span v-else>
                       {{ item.index }}
                     </span></td>
-                  <td><a :href="item.link" style="text-decoration: none;" class="blue-hover">
+                  <td style="max-width: 500px"><a :href="item.link" style="text-decoration: none;" class="blue-hover">
                     {{ item.title }}
                   </a></td>
-                  <td>{{ item.belong }}</td>
-                  <td>{{ item.time }}</td>
+                  <td style="max-width: 200px" class="blue-hover" @click="search_word(item.belong)">{{ item.belong }}</td>
+                  <td >{{ item.time }}</td>
                 </tr>
                 </tbody>
                 <tbody v-else-if="load_hot_article_error">
@@ -169,7 +249,7 @@
             </div>
           </div>
         </div>
-        <div class="col-4 " style="padding-right: 0">
+        <div class="col-12 " style="padding-left:0;margin-top: 20px">
           <div class="card" style="background-color: #f6f9feaf;height: 100%">
             <h5 class="card-header">周热词排行</h5>
             <div class="card-body" style="height: 100%">
@@ -202,9 +282,6 @@
                       {{ item.index }}
                     </span></td>
                   <td class="blue-hover" @click="search_word(item.name)">
-                    {{ item.name }}
-                  </td>
-                  <td>
                     <span v-if="item.index <= 3" style="color: red">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                            class="bi bi-fire" viewBox="0 0 16 16">
@@ -212,7 +289,9 @@
       d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z"/>
 </svg>
                     </span>
+                    {{ item.name }}
                   </td>
+
                   <td>{{ item.hot_value }}</td>
                   <td>
                     <span v-if="item.type===1" style="color: green">
@@ -244,77 +323,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="row" style="margin-top: 20px">
-        <div class="card" style="background-color: #f6f9feaf;height: 100%">
-          <h5 class="card-header">热文速递</h5>
-          <div class="card-body" style="height: 100%">
-            <el-space style="width: 100%" fill>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
-                <template #template>
-                  <div style="flex: 1">
-                    <el-skeleton-item variant="image" style="height: 240px"/>
-                    <div style="padding: 14px">
-                      <el-skeleton-item variant="h3" style="width: 50%"/>
-                      <div
-                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
-                        <el-skeleton-item variant="text" style="width: 30%"/>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(0,4)" :key="index"
-                           :body-style="{ padding: '10px'}"
-                           class="card-hover cus-card">
-                    <a :href="item.url" style="text-decoration: none;color: black">
-                      <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
-                      <div style="padding: 14px">
-                        <div style="margin-bottom: 10px">{{ item.title }}</div>
-                        <div class="bottom card-header" style="margin-top: 5px">
-                          {{ item.type === 0 ? "论文" : "专利" }}
-                        </div>
-                      </div>
-                    </a>
-
-                  </el-card>
-                </template>
-              </el-skeleton>
-              <el-skeleton style="display: flex; gap: 8px" :loading="loading_new_articles" animated :count="4">
-                <template #template>
-                  <div style="flex: 1">
-                    <el-skeleton-item variant="image" style="height: 240px"/>
-                    <div style="padding: 14px">
-                      <el-skeleton-item variant="h3" style="width: 50%"/>
-                      <div
-                          style="display: flex;align-items: center;justify-items: center;margin-top: 16px;height: 16px;">
-                        <el-skeleton-item variant="text" style="margin-right: 16px"/>
-                        <el-skeleton-item variant="text" style="width: 30%"/>
-                      </div>
-                    </div>
-                  </div>
-                </template>
-                <template #default>
-                  <el-card v-for="(item,index) in new_article_list.slice(4,8)" :key="index"
-                           :body-style="{ padding: '10px'}"
-                           class="card-hover cus-card">
-                    <a :href="item.url" style="text-decoration: none;color: black">
-                      <img :src="item.cover_img_url" class="image multi-content" style="max-width: 100%" alt=""/>
-                      <div style="padding: 14px">
-                        <div style="margin-bottom: 10px">{{ item.title }}</div>
-                        <div class="bottom card-header" style="margin-top: 5px">
-                          {{ item.type === 0 ? "论文" : "专利" }}
-                        </div>
-                      </div>
-                    </a>
-
-                  </el-card>
-                </template>
-              </el-skeleton>
-            </el-space>
           </div>
         </div>
       </div>
@@ -543,7 +551,8 @@ export default {
       this.dialogVisible = true;
     },
     load_hot_words() {
-        this.hot_words_list = [{index: 1, name: "新质生产力", hot_value: "82", type: 0},
+        this.hot_words_list = [
+          {index: 1, name: "新质生产力", hot_value: "82", type: 0},
           {index: 2, name: "数字化转型", hot_value: "67", type: 1},
           {index: 3, name: "人工智能", hot_value: "30", type: 2},
           {index: 4, name: "数字经济", hot_value: "12", type: 2},
@@ -559,10 +568,10 @@ export default {
       searchArticlesByTimeDesc().then((request) => {
         console.log(request.data)
         for (let i = 0; i < 10; i++) {
-          this.new_article_list.push({
-            index: i,
+          this.download_list.push({
+            index: i+1,
             title: request.data[i].articleName,
-            time: request.data[i].publishTime,
+            time: request.data[i].publishTime.substring(0,request.data[i].publishTime.indexOf("T")),
             belong:request.data[i].fieldOfResearch,
             link: `/article/${request.data[i].articleId}`,
           })
@@ -583,7 +592,7 @@ export default {
           this.new_article_list.push({
             title: request.data[i].articleName,
             url: `/article/${request.data[i].articleId}`,
-            cover_image_url:`images/testImage${i}.jpg`,
+            cover_image_url:`images/articleImage${i}.jpg`,
             type: 0,
           })
         }
