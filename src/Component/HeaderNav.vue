@@ -59,6 +59,7 @@
                             <li class="pointer" @click="selectTheme('来源')">来源</li>
                             <li class="pointer" @click="selectTheme('作者')">作者</li>
                             <li class="pointer" @click="selectTheme('研究领域')">研究领域</li>
+                            <li class="pointer" @click="selectTheme('全部')">全部</li>
                         </ul>
                     </template>
                 </el-popover>
@@ -111,6 +112,8 @@ const selectTheme = (value: string) => {
     searchParams.value.field = 'fieldOfResearch'
   } else if(value === '主题'){
     searchParams.value.field = 'articleName'
+  }else{
+    searchParams.value.field = 'all'
   }
 };
 interface Props {
