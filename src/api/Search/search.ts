@@ -1,10 +1,10 @@
-import { request } from "@/utils/http/request";
+import {request} from "@/utils/http/request";
 
 // 接口响应格式示例，您可以根据实际返回结构进行调整
 interface CommonResponse<T> {
-  code: number;
-  message: string;
-  data: T;
+    code: number;
+    message: string;
+    data: T;
 }
 
 // 如果需要更精准的类型，可在此定义接口
@@ -21,16 +21,17 @@ interface CommonResponse<T> {
  * 如果不再需要，请自行删除
  */
 interface SearchResponse {
-  data: any; // 根据实际返回的数据结构定义
-  // 其他可能的字段
+    data: any; // 根据实际返回的数据结构定义
+    // 其他可能的字段
 }
+
 export function getSearchData(page: number, question: string): Promise<SearchResponse> {
-  // 构建 URL，将 page 和 question 作为查询参数
-  const url = `/api/search?page=${page}&title=${encodeURIComponent(question)}`;
-  return request({
-    url,
-    method: 'get',
-  });
+    // 构建 URL，将 page 和 question 作为查询参数
+    const url = `/api/search?page=${page}&title=${encodeURIComponent(question)}`;
+    return request({
+        url,
+        method: 'get',
+    });
 }
 
 //
@@ -44,10 +45,10 @@ export function getSearchData(page: number, question: string): Promise<SearchRes
  * GET /search/article/allArticle
  */
 export function getAllArticles() {
-  return request<CommonResponse<any>>({
-    url: "/search/article/allArticle",
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: "/search/article/allArticle",
+        method: "get",
+    });
 }
 
 /**
@@ -57,11 +58,11 @@ export function getAllArticles() {
  * text: 搜索关键词
  */
 export function searchArticlesByField(field: string, text: string) {
-  // 如果后端没有斜杠分隔，而是直接拼接，需要自行修改
-  return request<CommonResponse<any>>({
-    url: `/search/article/${field}/${encodeURIComponent(text)}`,
-    method: "get",
-  });
+    // 如果后端没有斜杠分隔，而是直接拼接，需要自行修改
+    return request<CommonResponse<any>>({
+        url: `/search/article/${field}/${encodeURIComponent(text)}`,
+        method: "get",
+    });
 }
 
 /**
@@ -69,38 +70,40 @@ export function searchArticlesByField(field: string, text: string) {
  * GET /search/article/{field}/{text}/{page}/{pageSize}
  */
 export function searchArticlesByFieldWithPage(
-  field: string,
-  text: string,
-  page: number,
-  pageSize: number
+    field: string,
+    text: string,
+    page: number,
+    pageSize: number
 ) {
-  return request<CommonResponse<any>>({
-    url: `/search/article/page/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/article/page/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
+        method: "get",
+    });
 }
+
 export function searchSortedArticlesByFieldWithPage(
-  field: string,
-  text: string,
-  page: number,
-  pageSize: number,
-  orderFiled: string,
-  desc: number,
+    field: string,
+    text: string,
+    page: number,
+    pageSize: number,
+    orderFiled: string,
+    desc: number,
 ) {
-  return request<CommonResponse<any>>({
-    url: `/search/article/page/order/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField=${orderFiled}&desc=${desc}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/article/page/order/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField=${orderFiled}&desc=${desc}`,
+        method: "get",
+    });
 }
+
 /**
  * 根据文章ID获取指定文章
  * GET /search/article/doc/{articleId}
  */
 export function getArticleById(articleId: number) {
-  return request<CommonResponse<any>>({
-    url: `/search/article/doc/${articleId}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/article/doc/${articleId}`,
+        method: "get",
+    });
 }
 
 //
@@ -116,21 +119,23 @@ export function getArticleById(articleId: number) {
  * GET /search/patent/allPatent
  */
 export function getAllPatents() {
-  return request<CommonResponse<any>>({
-    url: "/search/patent/allPatent",
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: "/search/patent/allPatent",
+        method: "get",
+    });
 }
 
 /**
  * 根据字段搜索专利 (不带分页)
  * GET /search/patent/{field}/{text}
  */
-export function searchPatentsByField(field: string, text: string) {
-  return request<CommonResponse<any>>({
-    url: `/search/patent/${field}/${encodeURIComponent(text)}`,
-    method: "get",
-  });
+export function searchPatentsByField(
+    field: string,
+    text: string) {
+    return request<CommonResponse<any>>({
+        url: `/search/patent/${field}/${encodeURIComponent(text)}`,
+        method: "get",
+    });
 }
 
 /**
@@ -138,26 +143,39 @@ export function searchPatentsByField(field: string, text: string) {
  * GET /search/patent/page/{field}/{text}/{page}/{pageSize}
  */
 export function searchPatentsByFieldWithPage(
-  field: string,
-  text: string,
-  page: number,
-  pageSize: number
+    field: string,
+    text: string,
+    page: number,
+    pageSize: number
 ) {
-  return request<CommonResponse<any>>({
-    url: `/search/patent/page/${field}/${encodeURIComponent(text)}/${page}/${pageSize}`,
-    method: "get",
-  });
+    console.log('fasongqingqiu',field, text, page, pageSize)
+    return request<CommonResponse<any>>({
+        url: `/search/patent/page/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}`,
+        method: "get",
+    });
 }
-
+export function searchSortedPatentsByFieldWithPage(
+    field: string,
+    text: string,
+    page: number,
+    pageSize: number,
+    orderFiled: string,
+    desc: number
+) {
+    return request<CommonResponse<any>>({
+        url: `/search/patent/page/order/?field=${field}&text=${encodeURIComponent(text)}&page=${page}&pageSize=${pageSize}&orderField=${orderFiled}&desc=${desc}`,
+        method: "get",
+    });
+}
 /**
  * 根据专利ID获取指定专利
  * GET /search/patent/doc/{patentId}
  */
 export function getPatentById(patentId: number) {
-  return request<CommonResponse<any>>({
-    url: `/search/patent/doc/${patentId}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/patent/doc/${patentId}`,
+        method: "get",
+    });
 }
 
 //
@@ -173,10 +191,10 @@ export function getPatentById(patentId: number) {
  * GET /search/project/allProject
  */
 export function getAllProjects() {
-  return request<CommonResponse<any>>({
-    url: "/search/project/allProject",
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: "/search/project/allProject",
+        method: "get",
+    });
 }
 
 /**
@@ -184,10 +202,10 @@ export function getAllProjects() {
  * GET /search/project/{field}/{text}
  */
 export function searchProjectsByField(field: string, text: string) {
-  return request<CommonResponse<any>>({
-    url: `/search/project/${field}/${encodeURIComponent(text)}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/project/${field}/${encodeURIComponent(text)}`,
+        method: "get",
+    });
 }
 
 /**
@@ -195,15 +213,15 @@ export function searchProjectsByField(field: string, text: string) {
  * GET /search/project/page/{field}/{text}/{page}/{pageSize}
  */
 export function searchProjectsByFieldWithPage(
-  field: string,
-  text: string,
-  page: number,
-  pageSize: number
+    field: string,
+    text: string,
+    page: number,
+    pageSize: number
 ) {
-  return request<CommonResponse<any>>({
-    url: `/search/project/page/${field}/${encodeURIComponent(text)}/${page}/${pageSize}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/project/page/${field}/${encodeURIComponent(text)}/${page}/${pageSize}`,
+        method: "get",
+    });
 }
 
 /**
@@ -211,8 +229,8 @@ export function searchProjectsByFieldWithPage(
  * GET /search/project/doc/{projectId}
  */
 export function getProjectById(projectId: number) {
-  return request<CommonResponse<any>>({
-    url: `/search/project/doc/${projectId}`,
-    method: "get",
-  });
+    return request<CommonResponse<any>>({
+        url: `/search/project/doc/${projectId}`,
+        method: "get",
+    });
 }

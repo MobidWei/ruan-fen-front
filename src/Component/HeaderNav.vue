@@ -1,7 +1,7 @@
 <template>
     <div class="full-width">
         <div class="header flex align-center">
-          <Nav_bar></Nav_bar>
+            <Nav_bar></Nav_bar>
             <!-- <div class="header__conta">
                 <el-row>
                     <el-col :span="4">
@@ -68,31 +68,31 @@
                         @click="sendData"/></el-icon></span>
                 <div class="pointer flex-shrink ques flex align-center justify-center">
                     <el-icon>
-                        <ChatLineRound/>
+                        <QuestionFilled/>
                     </el-icon>
                     <span></span></div>
             </div>
         </div>
-<!--        <div class="submenu">-->
-<!--            <div class="submenu__con flex align-center">-->
-<!--                <div class="total__sub flex align-center">-->
-<!--                    <div class="total__sub__info flex align-center justify-center flex-shrink"><span class="-->
-<!--            b_t">总库</span></div>-->
-<!--                </div>-->
-<!--                <div class="all__sub flex-1">-->
-<!--                    <div class="all__sub__inner  flex align-center flex-1">-->
-<!--                        <div v-for="item in submenu" :key="item.id"-->
-<!--                             class="flex flex-column align-center  flex-1 pointer submenu__item ">-->
-<!--                            <span class="b_b">{{ item.title }}</span>-->
-<!--                            <el-icon v-show="item.isArrow">-->
-<!--                                <CaretBottom/>-->
-<!--                            </el-icon>-->
-<!--                            <span class="blank" v-show="!item.isArrow"></span>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        <!--        <div class="submenu">-->
+        <!--            <div class="submenu__con flex align-center">-->
+        <!--                <div class="total__sub flex align-center">-->
+        <!--                    <div class="total__sub__info flex align-center justify-center flex-shrink"><span class="-->
+        <!--            b_t">总库</span></div>-->
+        <!--                </div>-->
+        <!--                <div class="all__sub flex-1">-->
+        <!--                    <div class="all__sub__inner  flex align-center flex-1">-->
+        <!--                        <div v-for="item in submenu" :key="item.id"-->
+        <!--                             class="flex flex-column align-center  flex-1 pointer submenu__item ">-->
+        <!--                            <span class="b_b">{{ item.title }}</span>-->
+        <!--                            <el-icon v-show="item.isArrow">-->
+        <!--                                <CaretBottom/>-->
+        <!--                            </el-icon>-->
+        <!--                            <span class="blank" v-show="!item.isArrow"></span>-->
+        <!--                        </div>-->
+        <!--                    </div>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </div>-->
     </div>
 </template>
 
@@ -102,20 +102,22 @@ import Nav_bar from "@/Component/header.vue";
 import {defineProps} from "vue/dist/vue";
 
 const currentField = ref('主题');
+const type = ref('文献');
 const selectTheme = (value: string) => {
-  currentField.value = value;
-  if (value === '来源') {
-    searchParams.value.field = 'source'
-  } else if (value === '作者') {
-    searchParams.value.field = 'researcherName'
-  } else if (value === '研究领域') {
-    searchParams.value.field = 'fieldOfResearch'
-  } else if(value === '主题'){
-    searchParams.value.field = 'articleName'
-  }else{
-    searchParams.value.field = 'all'
-  }
+    currentField.value = value;
+    if (value === '来源') {
+        searchParams.value.field = 'source'
+    } else if (value === '作者') {
+        searchParams.value.field = 'researcherName'
+    } else if (value === '研究领域') {
+        searchParams.value.field = 'fieldOfResearch'
+    } else if (value === '主题') {
+        searchParams.value.field = 'articleName'
+    } else {
+        searchParams.value.field = 'all'
+    }
 };
+
 interface Props {
     page: number
     field: string;
@@ -124,39 +126,42 @@ interface Props {
 
 const props = defineProps<Props>();
 // eslint-disable-next-line vue/no-setup-props-destructure
-const init = (value :string)=>{
-  if (value === '来源') {
-    return 'source'
-  } else if (value === '作者') {
-    return 'researcherName'
-  } else if (value === '研究领域') {
-    return 'fieldOfResearch'
-  } else if(value === '主题'){
-    return 'articleName'
-  }
-  return ''
+const init = (value: string) => {
+    if (value === '来源') {
+        return 'source'
+    } else if (value === '作者') {
+        return 'researcherName'
+    } else if (value === '研究领域') {
+        return 'fieldOfResearch'
+    } else if (value === '主题') {
+        return 'articleName'
+    }
+    return ''
 }
 // eslint-disable-next-line vue/no-setup-props-destructure
 currentField.value = props.field;
 const searchParams = ref({
     search: ''
-    , field:'articleName'
-    ,page:props.page
-    ,pageSize:20
+    , field: 'articleName'
+    , page: props.page
+    , pageSize: 20
 })
 // eslint-disable-next-line vue/no-setup-props-destructure
 searchParams.value.field = init(props.field)
 // eslint-disable-next-line vue/no-setup-props-destructure
-searchParams.value.search=props.question
+searchParams.value.search = props.question
 const emit = defineEmits<{
-    (event: 'sendData', payload: { search: string ,field: string}): void;
-    (event: 'requestSearch', payload: {search:string,field: string,page: number,pageSize: number }): void;
+    (event: 'sendData', payload: { search: string, field: string }): void;
+    (event: 'requestSearch', payload: { search: string, field: string, page: number, pageSize: number }): void;
 }>();
 const sendData = () => {
     emit('sendData', searchParams.value);
     emit('requestSearch', searchParams.value);
 };
-onMounted(() => { sendData() })
+onMounted(() => {
+    sendData()
+})
+
 interface MenuItem {
     id: number;
     label: string;

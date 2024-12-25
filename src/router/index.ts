@@ -53,11 +53,34 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/search',
     name: 'search',
-    component: () => import('../views/SearchView.vue'),
     props: route => ({
       field: route.query.field,
       question: route.query.question
-    })
+    }),
+    children: [
+    {
+      path: '', // 默认子路由，匹配 /search/
+      redirect: 'article' // 自动重定向到 /search/article
+    },
+    {
+      path: 'article',
+      name: 'searchArticle',
+      component: () => import('../views/SearchArticleView.vue'),
+      props: route => ({
+        field: route.query.field,
+        question: route.query.question
+      })
+    },
+    {
+      path: 'patent',
+      name: 'searchPatent',
+      component: () => import('../views/SearchPatentView.vue'),
+      props: route => ({
+        field: route.query.field,
+        question: route.query.question
+      })
+    }
+  ]
   },
   {
     path:'/ResearchUser',
