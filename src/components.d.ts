@@ -30,12 +30,12 @@ declare module '@vue/runtime-core' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
-    Header: typeof import('./components/Header/index.vue')['default']
-    HeaderNav: typeof import('./components/HeaderNav/index.vue')['default']
-    HelloWorld: typeof import('./components/HelloWorld.vue')['default']
+    Header: typeof import('@/Components/Header/index.vue')['default']
+    HeaderNav: typeof import('@/Components/HeaderNav/index.vue')['default']
+    HelloWorld: typeof import('@/Components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    SearchFIlter: typeof import('./components/SearchFIlter/index.vue')['default']
-    SearchResult: typeof import('./components/SearchResult/index.vue')['default']
+    SearchFIlter: typeof import('@/Components/SearchFIlter/index.vue')['default']
+    SearchResult: typeof import('@/Components/SearchResult/index.vue')['default']
   }
 }

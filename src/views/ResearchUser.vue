@@ -117,7 +117,7 @@
 
 <script>
 import { defineComponent, onMounted, ref } from "vue";
-import header from "../component/header.vue";
+import header from "@/component/header.vue";
 import request from "../utils/http/request.ts";
 
 export default defineComponent({

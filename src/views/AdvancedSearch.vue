@@ -135,8 +135,8 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import header from "../component/header.vue";
-import SearchResult from "../component/SearchResult.vue";
+import header from "@/component/header.vue";
+import SearchResult from "@/component/SearchResult.vue";
 import { Plus, Delete, Search } from "@element-plus/icons-vue";
 import { request } from "../utils/http/request.ts";
 

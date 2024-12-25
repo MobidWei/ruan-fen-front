@@ -1,46 +1,37 @@
 <script setup lang="ts">
-  import { ref } from "vue"
+import {computed, nextTick, ref} from "vue"
   import { onMounted, watch } from 'vue'
-  import Navbar3 from "../components/Navbar.vue"
+  import {request} from "@/utils/http/request";
+  import * as articles from "../api/works/article"
+  import Navbar3 from "@/Components/Navbar.vue"
+  import {useRoute} from 'vue-router'
+  import {ar} from "element-plus/es/locale";
+  import store from "@/store"
   // 侧边栏收起
+
+  const route= useRoute()
+
+  let data=ref()
   let collapsed = ref(false)
   let sideBarButton = ref("收起")
-  let title = ref("文章标题")
-  let authors = ref(["作者1", "作者2"])
-  let abstract = ref("玻璃纤维增强热固性聚合物复合材料（GFRP）在各种工业领域中被广泛应用，其优异的力学性能和耐腐蚀性使其成为替代传统材料的" +
-      "理想选择。目前，全球聚合物复合材料年产量超过1 600万t，并以约8%的年增长率不断增加。然而，GFRP的废弃物处理一直是一个挑战，因为热固性基体难以降" +
-      "解且复合材料很难进行有效的回收利用。据统计，仅有不到10%的废料得到回收利用，特别是在风电行业，废弃叶片的回收面临巨大挑战。随着风电设备的装机容量" +
-      "不断增加，风电叶片的回收需求迫在眉睫。目前，机械粉碎虽然是主要的回收工艺，但化学回收和热解回收处理后的纤维质量较高而显示出更大的潜在优势。然而，" +
-      "各种工艺的需求尚未得到充分的解释，影响了经济价值及工艺可行性评估。总结了玻璃纤维增强热固性聚合物复合材料的化学回收和热解回收利用方法，并讨论了" +
-      "相关挑战和未来发展趋势，旨在推动GFRP废弃物的有效处理和资源化利用。")
-  let keywords = ref(["玻璃纤维增强热固性聚合物复合材料（GFRP）", "化学回收", "热解回收"])
+  let title = ref("")
+  let author = ref("")
+  let authorUrl = ref("")
+  let abstract = ref("")
   let keywordsContent = ref("")
-  let references = ref(["[1] 碳纤维复合材料的应用分析[J]. 熊睿彦.数码世界,2017(12)\n",
-  "[2] 低成本聚丙烯腈基碳纤维的创新发展[J]. 罗益锋;罗晰旻.新材料产业,2017(08)\n" ,
-  "[3] 中空碳纤维研究现状及应用[J]. 刘先凤;李好义;谭晶;沙扬;曹维宇;杨涛;杨卫民.化工新型材料,2017(06)\n" ,
-  "[4] 碳纤维复合材料在海洋中的应用[J]. 于礼玮;曹维宇.化工新型材料,2016(08)\n" ,
-  "[5] 碳纤维的等离子体表面处理技术研究进展[J]. 何烨;肖建文;孔德玉;曹维宇.弹性体,2015(06)\n" ,
-  "[6] 聚丙烯腈基碳纤维高温石墨化综述[J]. 卢天豪;陆文晴;童元建.高科技纤维与应用,2013(03)\n" ,
-  "[7] 围绕市场发展国产碳纤维制备及其应用技术[J]. 冯闻;徐梁华.高科技纤维与应用,2013(03)\n" ,
-  "[8] 高性能PAN基碳纤维国产化进展及发展趋势[J]. 徐樑华.中国材料进展,2012(10)\n" ,
-  "[9] 国产碳纤维质量状况分析及对策建议[J]. 徐樑华.新材料产业,2010(09)\n" ,
-  "[10] 高模量碳纤维的现状及发展(1)[J]. 沈曾民;迟伟东;张学军;田艳红.高科技纤维与应用,2010(03)",
-  "[11] 第二页1",
-  "[12] 第二页2",
-  "[13] 第二页3",
-  "[14] 第二页4",
-  "[15] 第二页5",
-  "[16] 第二页6",
-  "[17] 第二页7",
-  "[18] 第二页8",
-  "[19] 第二页9",
-  "[20] 第二页10"
-  ])
+  let doi = ref("")
+  let references = ref<{num:string,link:string}[]>([])
+  let referenceUrls = []
+  let field = ref("")
+  let publishTime = ref("")
+  let views = ref(0)
+  let researcherInstitution = ref("")
+  let htmlLink = ref("")
 
-  //引用的页数
-  let refPageNum = ref(references.value.length)
+  //引用条数
+  let refPageNum = ref(0)
   //当前页面的引用
-  let refPageList = ref<string[]>([])
+  let refPageList = ref<{num:string,link:string}[]>([])
   let curPage = ref(0)
   //当前所显示的那些页（例如1，2，3...5）中显示1、2、3、5
   let curPageList = ref<number[]>([])
@@ -54,13 +45,18 @@
   }
   //评论部分
   let comments = ref<Comment[]>([])
+  let commentNum = ref(0)
+  let curPageComment = ref<Comment[]>([])
+  let curCommentPageNum = ref(0)
 
-  const connectKeywords = (keywords: string[]) => {
-    keywordsContent.value = ""
-    for (let i = 0; i < keywords.length - 1; i++) {
-      keywordsContent.value += keywords[i] + "; "
+  let myCommentContent = ref("")
+
+  const changeCommentPage = (page: number) => {
+    curPageComment.value = [];
+    curCommentPageNum.value = page;
+    for(let i=(curCommentPageNum.value -1) * 6; i < ((curCommentPageNum.value - 1) * 6 + 6) && i < commentNum.value; i++){
+      curPageComment.value.push(comments.value[i])
     }
-    keywordsContent.value += keywords[keywords.length - 1]
   }
 
   const modifySideState = () => {
@@ -72,34 +68,102 @@
     }
   }
 
-  /**
-   * 获取文章
-   */
-  const getArticle = () => {
-    console.log("获取文章")
-  }
-
   const changePage = (page: number) => {
     curPage.value = page;
     refPageList.value = [];
-    for (let i = (curPage.value - 1) * 10; i < ((curPage.value - 1) * 10 + 10); i++) {
+    for (let i = (curPage.value - 1) * 10; i < ((curPage.value - 1) * 10 + 10) && i < references.value.length; i++) {
       refPageList.value.push(references.value[i]);
     }
   }
 
-  // watch(curPage, () => {
-  //   refPageList.value = [];
-  //   for (let i = (curPage.value - 1) * 10; i < ((curPage.value - 1) * 10 + 10); i++) {
-  //     refPageList.value.push(references.value[i]);
-  //   }
-  // });
+  const modifyViews = () => {
+    views.value = views.value + 1
+  }
+
+  const getUserName = async(userId: number) => {
+    const userResponse = await articles.getUserName(userId)
+    return userResponse.data.userName
+  }
+
+  const initializeArticleContent = async() => {
+    let articleId = Number(route.params.id)
+    const articleResponse = await articles.getArticle(articleId)
+    const data = articleResponse.data
+    title.value = data.articleName
+    abstract.value = data.abstractText
+    keywordsContent.value = data.keywords
+    doi.value = data.doi
+    if(doi.value!=undefined && doi.value!=""){
+      doi.value=doi.value.split("doi.org/")[1]
+    }
+    else{
+      doi.value = "未知"
+    }
+    field.value = data.fieldOfResearch
+    publishTime.value = data.publishTime
+    if(publishTime.value!=undefined){
+      publishTime.value = publishTime.value.split("T")[0]
+    }
+    else{
+      publishTime.value = "未知"
+    }
+    views.value = data.views
+    // console.log(data.referencedWorks)
+    referenceUrls = data.referencedWorks.replace(" ","").split(",")
+    if(referenceUrls[0]==""){
+      referenceUrls = []
+    }
+    for (let i = 0; i < referenceUrls.length; i++) {
+      references.value.push({
+        num: "[" + (i+1) + "]",
+        link: referenceUrls[i]
+      })
+    }
+    author.value = data.researcherName
+    authorUrl.value = "https://openalex.org/"+data.researcherUrl
+    researcherInstitution.value = data.researcherInstitution
+    refPageNum.value = references.value.length
+    commentNum.value = comments.value.length
+    htmlLink.value = doi.value=="未知" ? "https://openalex.org/"+data.url : "https://doi.org/"+doi.value
+    // console.log(referenceUrls)
+    // const referenceResponse = await articles.getReference(referenceUrls)
+    // const referenceData = referenceResponse.data
+    // // console.log(referenceResponse)
+    // // references.value = referenceResponse
+    // console.log(referenceData)
+  }
+
+  const getComments = async() => {
+    const commentsResponse = await articles.getArticleComments(Number(route.params.id))
+    const data = commentsResponse.data
+    for (let i = 0; i < data.length; i++) {
+      let username = await getUserName(data[i].userId)
+      comments.value.push(new Comment(data[i].commentContent, username, data[i].commentTime.replace("T", " ")))
+    }
+  }
+
+  const handleSubmit = () => {
+    articles.postComment(Number(route.params.id), myCommentContent.value, Number(store.state.userId))
+  }
+
+  const handleCancel = () => {
+    myCommentContent.value = ""
+  }
 
   onMounted(() => {
-    connectKeywords(keywords.value)
     // initializeRefPageList();
     curPage.value=1
-    changePage(1)
-    comments.value.push(new Comment("评论1", "作者1", new Date()))
+    // comments.value.push(new Comment("评论1", "作者1", new Date()))
+    // comments.value.push(new Comment("评论2", "作者2", new Date()))
+    getComments().then(() => {
+      initializeArticleContent().then(() => {
+        // refPageNum.value = Math.ceil(references.value.length / 10)
+        // console.log(refPageNum.value)
+        changePage(1)
+        changeCommentPage(1)
+      })
+    })
+    articles.addView(Number(route.params.id))
   })
 
 </script>
@@ -108,28 +172,28 @@
   <div id="outermostContainer">
 <!--    <Navbar3 />-->
     <div id="contentContainer">
-      <el-container style="border: 1px solid #c93d3d;">
-        <el-aside :class="collapsed ? 'hiddenOuterSideBar' : 'outerSideBar'">
-          <!--    控制收起和展开的按钮      -->
-          <el-button @click="modifySideState" :class="collapsed ? 'hiddenSideBarButton' : 'sideBarButton'">{{sideBarButton}}</el-button>
-          <h5 style="margin-top: 60px;margin-left: 15px" :class="collapsed ? 'hiddenSideBar' : ''">文章目录</h5>
-          <div :class="collapsed ? 'hiddenSideBar' : 'sideBar'">
-            <!--     侧边栏内容     -->
-            <div style="margin-top:10px; margin-left:15px">
-              <div>
-                以下为目录
-              </div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>
-            </div>
-          </div>
-        </el-aside>
+      <el-container style="border: 1px solid #4B0082;">
+<!--        <el-aside :class="collapsed ? 'hiddenOuterSideBar' : 'outerSideBar'">-->
+<!--          &lt;!&ndash;    控制收起和展开的按钮      &ndash;&gt;-->
+<!--          <el-button @click="modifySideState" :class="collapsed ? 'hiddenSideBarButton' : 'sideBarButton'">{{sideBarButton}}</el-button>-->
+<!--          <h5 style="margin-top: 60px;margin-left: 15px" :class="collapsed ? 'hiddenSideBar' : ''">文章目录</h5>-->
+<!--          <div :class="collapsed ? 'hiddenSideBar' : 'sideBar'">-->
+<!--            &lt;!&ndash;     侧边栏内容     &ndash;&gt;-->
+<!--            <div style="margin-top:10px; margin-left:15px">-->
+<!--              <div>-->
+<!--                以下为目录-->
+<!--              </div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--              <div>目录</div><div>目录</div><div>目录</div><div>目录</div><div>目录</div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </el-aside>-->
 
         <el-container style="flex-direction: column">
           <el-main>
@@ -140,8 +204,10 @@
                 <h1 id="title">{{ title }}</h1>
                 <h3 id="author">
                   <!--    使用v-for来添加多个作者     -->
-                  <span>作者</span>
-                  <span>作者</span>
+                  <a target="_blank" :href="authorUrl">{{ author }}</a>
+                </h3>
+                <h3 id="institution">
+                  <span>{{researcherInstitution}}</span>
                 </h3>
               </div>
               <div class="row">
@@ -152,21 +218,29 @@
                 <span class="rowTitle">关键词：</span>
                 <span class="rowContent">{{ keywordsContent }}</span>
               </div>
-              <div class="row">
-                <span class="rowTitle">可添加更多属性</span>
+              <div class="row" v-if="doi!='未知'">
+                <span class="rowTitle">DOI：</span>
+                <span class="rowContent">{{ doi }}</span>
               </div>
               <div class="row">
-                <span class="rowTitle">可添加更多属性</span>
+                <span class="rowTitle">研究领域</span>
+                <span class="rowContent">{{ field }}</span>
               </div>
               <div class="row">
-                <span class="rowTitle">可添加更多属性</span>
+                <span class="rowTitle">发表时间</span>
+                <span class="rowContent">{{ publishTime }}</span>
+              </div>
+              <div class="row">
+                <span class="rowTitle">浏览量</span>
+                <span class="rowContent">{{ views }}</span>
               </div>
             </div>
             <div class="reference">
               <h3 style="margin: 0 auto">参考文献</h3>
               <div style="display: flex; margin-top: 15px; flex-direction: column; gap: 10px">
                 <div v-for="curPageContent in refPageList" :key="curPageContent" style="color: #666; font-size: 14px">
-                  {{ curPageContent }}
+                  {{ curPageContent.num + " " }}
+                  <a :href="'https://openalex.org/'+curPageContent.link" target="_blank">{{ curPageContent.link }}</a>
                 </div>
                 <div style="display: flex; justify-content: center">
                   <el-pagination
@@ -179,7 +253,7 @@
               </div>
             </div>
             <div class="operate">
-              <a target="_blank" href="https://baidu.com">查看原文</a>
+              <a target="_blank" :href="htmlLink">查看原文</a>
             </div>
           </el-main>
         </el-container>
@@ -188,6 +262,41 @@
         <div class="comment-title">
           <h1>评论</h1>
         </div>
+
+        <div class="comment-content">
+          <!-- 循环显示评论 -->
+          <div class="comment-item" v-for="comment in curPageComment" :key="comment">
+            <div class="comment-header">
+              <span class="comment-author">{{ comment.author }}</span>
+              <span class="comment-time">{{ comment.time }}</span>
+            </div>
+            <div class="comment-text">{{ comment.content }}</div>
+            <hr />
+          </div>
+        </div>
+
+        <el-pagination
+            :current-page="curCommentPageNum"
+            @current-change="changeCommentPage"
+            layout="prev, pager, next"
+            :total="commentNum"
+            style="margin-bottom: 20px">
+        </el-pagination>
+
+        <el-form style="display: flex; flex-direction: column; align-content: center; width: 65%; margin-bottom: 20px" :disabled="!store.state.hasLogin">
+          <el-input
+              style="border-radius: 5px;"
+              type="textarea"
+              size="large"
+              placeholder="请友善评论哦~"
+              v-model="myCommentContent"
+              @keyup.enter="handleSubmit">
+          </el-input>
+          <div style="display: flex; flex-direction: row">
+            <el-button type="primary" @click="handleSubmit" style="width:50px; margin-right: 10px;margin-top: 10px; background-color: #5D3F6A">发表</el-button>
+            <el-button type="primary" @click="handleCancel" style="margin-top: 10px; width:50px; background-color: #5D3F6A">取消</el-button>
+          </div>
+        </el-form>
       </div>
     </div>
   </div>
@@ -268,6 +377,13 @@
     gap: 10px;
   }
 
+  #institution{
+    display: flex;
+    font-size: 14px;
+    justify-content: center;
+    gap: 10px;
+  }
+
   .row{
     float: none;
     min-height: 26px;
@@ -309,7 +425,7 @@
   }
 
   .operate{
-    border-top: 1px solid #c93d3d;
+    border-top: 1px solid #4B0082;
     padding-top: 20px;
     font-size: 28px;
     height: 30px;
@@ -323,7 +439,7 @@
     display: flex;
     flex-direction: column;
     width: 79%;
-    border-top: 1px solid #c93d3d;
+    border-top: 1px solid #4B0082;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
@@ -334,7 +450,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 30px;
-    border: 1px solid #c93d3d;
+    border: 1px solid #4B0082;
     align-items: center;
   }
 
@@ -342,17 +458,66 @@
     display: flex;
     justify-content: center;
     padding-top: 20px;
-    border-bottom: 1px solid #c93d3d;
+    border-bottom: 1px solid #4B0082;
     width: 87%;
   }
 
-  .comment-content{}
+  .comment-content {
+    width: 100%;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-  .comment-author{}
+  .comment-item {
+    margin-bottom: 20px;
+    width: 87%;
+  }
 
-  .comment-text{}
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #333;
+  }
 
-  .comment-time{}
+  .comment-author {
+    font-weight: bold;
+  }
 
-  .comment-pagination{}
+  .comment-time {
+    font-style: italic;
+    color: #777;
+  }
+
+  .comment-text {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #555;
+  }
+
+  .comment-pagination {
+    margin-top: 20px;
+    width: 87%;
+    text-align: center;
+  }
+
+  /* 分隔线样式 */
+  .comment-item hr {
+    border: 1px solid #e0e0e0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  a {
+    color: #5D3F6A;
+  }
+
+
+  :deep .el-pagination .el-pager li:not(.active):not(.disabled) {
+    color: #5D3F6A;
+  }
+
+
 </style>
