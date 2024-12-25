@@ -84,7 +84,7 @@ const handleSearchRequest = async (
         console.log(response);
         if (response.code === 200) {
             // 返回值中 response.data = List<ArticleDoc>
-            articleList.value = response.data.articleDocs || [];
+            articleList.value = response.data.PatentDocs || [];
             count.value = response.data.count||0;
             totalItems.value = Math.ceil(response.data.count / 20) || 1;
             console.log(totalItems.value);
@@ -114,7 +114,7 @@ const updateSort = async ({ orderField, desc }: { orderField: string; desc: numb
             desc
         );
         if (response.code === 200) {
-            articleList.value = response.data.articleDocs || [];
+            articleList.value = response.data.PatentDocs || [];
             totalItems.value = Math.ceil(response.data.count / 20) || 1;
             count.value = response.data.count || 0;
         } else {
